@@ -1,11 +1,11 @@
 # Basic
-title: GcsSloop
-subtitle: Just do IT later.
-welcome_message: 欢迎来到我的魔法世界! 
-description: 嗨，我是 GcsSloop，一名来自2.5次元的魔法师，Android自定义View系列文章作者，非著名程序员。
-creator: <a href="http://www.GcsSloop.com">@GcsSloop</a>
+title: Hxmeie
+subtitle: are you ok?
+welcome_message: 时间不在于你拥有多少，而在于你怎样使用。 
+description: 大家好，我是Hxmeie,一名毕业于2016年的菜鸟Android工程师，让我们共同进步吧。
+creator: <a href="http://hxmeie.github.io">@hxmeie</a>
 
-url: "http://www.gcssloop.com"
+url: "http://hxmeie.github.io"
 
 permalink: /:categories/:title
 
@@ -23,7 +23,7 @@ blog_button:
     description: 访问博客
 
 nav:
-    - {title: GitHub,     in_site: false,  description: GcsSloop's GitHub,    url: 'https://github.com/GcsSloop'}
+    - {title: GitHub,     in_site: false,  description: 我的github,    url: 'https://github.com/hxmeie'}
     - {title: 目录,        in_site: true,  description: 博客目录,               url: '/timeline'}
     - {title: 基友,        in_site: true,  description: 好基(姬)友们和他们的网站, url: '/friends'}
     - {title: 自定义控件,   in_site: true,  description: 自定义View教程目录,      url: '/customview/CustomViewIndex'}
