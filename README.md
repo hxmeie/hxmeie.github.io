@@ -1,9 +1,5 @@
 # 个人主页
 
-访问地址: http://www.gcssloop.com
+测试地址: http://hxmeie.github.io
 
-备份地址1: http://gcssloop.com
-
-备份地址2: http://gcssloop.coding.me
-
-测试地址: http://gcssloop.github.io
+一个博客弄了好长时间，什么环境配置老是出错，干脆直接用别人的模板了，简单便捷
