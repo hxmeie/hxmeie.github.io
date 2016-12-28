@@ -49,16 +49,16 @@
     max-width: 700px;
   }
 
-  // .panel-cover--overlay {
-  //   display: block;
-  //   position: absolute;
-  //   z-index: 0;
-  //   top: 0;
-  //   right: 0;
-  //   bottom: 0;
-  //   left: 0;
-  //   @include linear-gradient(140deg, rgba(#444444,.6) 20%, rgba(#000000,.9));
-  // }
+  .panel-cover--overlay {
+    display: block;
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    @include linear-gradient(140deg, rgba(#444444,.6) 20%, rgba(#000000,.9));
+  }
 
   .panel-cover__logo {
     margin-bottom: .2em;
