@@ -5,7 +5,7 @@ welcome_message: 时间不在于你拥有多少，而在于你怎样使用。
 description: 记录开发中遇到的问题，个人生活日记
 creator: <a href="http://hxmeie.github.io">@hxmeie</a>
 
-url: "http://hxmeie.github.io"
+url: "http://www.hxmeie.cn"
 
 permalink: /:categories/:title
 
