@@ -1,8 +1,8 @@
 # Basic
 title: Hxmeie
 subtitle: are you ok?
-welcome_message: 时间不在于你拥有多少，而在于你怎样使用。 
-description: 大家好，我是Hxmeie,一名毕业于2016年的菜鸟Android工程师，让我们共同进步吧。
+welcome_message: 时间不在于你拥有多少，而在于你怎样使用。
+description: 记录开发中遇到的问题，个人生活日记
 creator: <a href="http://hxmeie.github.io">@hxmeie</a>
 
 url: "http://hxmeie.github.io"
@@ -16,7 +16,7 @@ redcarpet:
   extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "strikethrough", "superscript", tables]
 
 # supported colors: blue, green, purple, red, orange or slate. If you need clear, leave it empty.
-cover_color: slate
+# cover_color: slate
 
 blog_button:
     title: 博客
@@ -28,7 +28,7 @@ nav:
     - {title: 基友,        in_site: true,  description: 好基(姬)友们和他们的网站, url: '/friends'}
     - {title: 自定义控件,   in_site: true,  description: 自定义View教程目录,      url: '/customview/CustomViewIndex'}
     - {title: 关于,        in_site: true,  description: 关于作者 GcsSloop,       url: '/info/about'}
-    
+
 
 
 gems:
@@ -49,11 +49,11 @@ social:
     weibo: 啊哈我的天啊
     github: hxmeie
     qq: 1247535723
-    rss: /feed.xml
+    # rss: /feed.xml
     mail: hxmeie@gmail.com
-    copyright: http://choosealicense.online
+    # copyright: http://choosealicense.online
 
 # Google Analytics
 ga:
-    id: UA-82493667-1
-    host: www.gcssloop.com
+    id: UA-89527684-1
+    host: www.hxmeie.cn
