@@ -1,4 +1,4 @@
 User-agent: *
-Disallow: 
+Disallow:
 Disallow: /doc
-Sitemap: http://www.gcssloop.com/sitemap.xml
+Sitemap: http://www.hxmeie.cn/sitemap.xml
