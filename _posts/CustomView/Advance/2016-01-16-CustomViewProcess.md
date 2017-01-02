@@ -65,7 +65,7 @@ public ImageButton(Context context, AttributeSet attrs) {
 
 public ImageButton(Context context, AttributeSet attrs, int defStyleAttr) {
     //此处调了四个参数的构造函数，无视即可
-    this(context, attrs, defStyleAttr, 0); 
+    this(context, attrs, defStyleAttr, 0);
 }
 ```
 
@@ -116,7 +116,7 @@ SloopView view  new SloopView(this);
 protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
     int widthsize  MeasureSpec.getSize(widthMeasureSpec);      //取出宽度的确切数值
     int widthmode  MeasureSpec.getMode(widthMeasureSpec);      //取出宽度的测量模式
-    
+
     int heightsize  MeasureSpec.getSize(heightMeasureSpec);    //取出高度的确切数值
     int heightmode  MeasureSpec.getMode(heightMeasureSpec);    //取出高度的测量模式
 }
@@ -192,7 +192,7 @@ child.layout(l, t, r, b);
 |  r   | View右侧距父View左侧的距离 | getRight();  |
 |  b   | View底部距父View顶部的距离 | getBottom(); |
 
-具体可以参考 [坐标系](http://www.gcssloop.com/customview/CoordinateSystem/) 这篇文章。
+具体可以参考 [坐标系](http://www.hxmeie.cn/customview/CoordinateSystem/) 这篇文章。
 
 ![View坐标系](http://ww2.sinaimg.cn/large/005Xtdi2gw1f1qzqwvkkbj308c0dwgm9.jpg)
 
