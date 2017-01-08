@@ -2,22 +2,22 @@
 layout: post
 category: Info
 title: 目录视图
-date: 1970-01-01 00:00:00.000000000 +00:00
-tags: GcsSloop, info
-keywords: GcsSloop, gcssloop
+date: 2016-01-08 00:00:00
+tags: hxmeie, info
+keywords: hxmeie
 excerpt: 博客时间线
 ---
 
 <!-- SiteSearch Google -->
 
-<form class="google-search" method="get" action="http://www.google.com/search" target="_blank">
+<!-- <form class="google-search" method="get" action="http://www.google.com/search" target="_blank">
   <div class="search-wrap">
     <div width="100%">
       <div width="100%">
       <input type="text" name="q" value=""/>
       <input type="submit" src="/assets/siteinfo/search_bg.png" alt="Submit" width="80" height="24" value="搜索" />
       </div>
-      <input type="hidden" name="domains" value="{{ site.url }}" /> 
+      <input type="hidden" name="domains" value="{{ site.url }}" />
       <input type="hidden" name="sitesearch" value="{{ site.url }}" />
       <input type="hidden" name="ie" value="utf-8" />
       <input type="hidden" name="oe" value="utf-8" />
@@ -28,7 +28,7 @@ excerpt: 博客时间线
 
 <div style="margin: 10px 0 20px 0;">
   站内搜索功能由谷歌提供，需科学上网。
-</div>
+</div> -->
 
 <!-- SiteSearch Google -->
 
@@ -44,7 +44,7 @@ excerpt: 博客时间线
       {% endif %}
     {% endfor %}
         <!--置顶-->
-    {% for post in site.posts %}        
+    {% for post in site.posts %}
       {% if post.istop %}
       {% else %}
         <li>
@@ -54,6 +54,3 @@ excerpt: 博客时间线
       {% endif %}
     {% endfor %}
   </ol>
-
-
-
