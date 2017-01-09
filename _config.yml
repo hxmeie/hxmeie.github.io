@@ -25,7 +25,7 @@ blog_button:
 nav:
     - {title: 目录,        in_site: true,  description: 博客目录,               url: '/timeline'}
     - {title: GitHub,     in_site: false,  description: hxmeie的github,    url: 'https://github.com/hxmeie'}
-    - {title: 关于,        in_site: true,  description: 关于作者 hxmeie,       url: '/BaseInfo/AboutMe'}
+    - {title: 关于,        in_site: true,  description: 关于作者 hxmeie,       url: '/baseinfo/AboutMe'}
 
 
 
