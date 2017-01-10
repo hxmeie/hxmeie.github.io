@@ -26,6 +26,7 @@ Android源码中有一个类 **TouchDelegate**，这个类的作用就是帮助�
 废话不多说直接上代码：
 
 **布局文件activity_main.xml**
+
 ``` xml
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -44,6 +45,7 @@ Android源码中有一个类 **TouchDelegate**，这个类的作用就是帮助�
 ```
 
 **主要代码片段**
+
 ``` java
 //获取 parent view
  View rootView = findViewById(R.id.root_view);
