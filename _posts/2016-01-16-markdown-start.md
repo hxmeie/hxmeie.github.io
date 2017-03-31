@@ -1,6 +1,6 @@
 ---
 layout: post
-category: Markdown
+category: Blog
 title: Markdown实用技巧－快速入门
 tags: Markdown
 keywords: Markdown,Markdown实用技巧,Markdown语法,GcsSloop, gcssloop
@@ -157,8 +157,8 @@ excerpt: 本文为 Markdown实用技巧 系列文章的基础内容。自从接�
     <td><a href="http://www.hxmeie.cn" target="_blank">Hxmeie</a></td>
   </tr>
   <tr class="alternate">
-    <td>![GcsSloop Blog](http://www.hxmeie.cn/assets/siteinfo/avatar.jpg)</td>
-    <td><img src="http://www.hxmeie.cn/assets/siteinfo/avatar.jpg" alt="GcsSloop Blog" /></td>
+    <td>![Hxmeie Blog](http://www.hxmeie.cn/assets/siteinfo/avatar.jpg)</td>
+    <td><img src="http://www.hxmeie.cn/assets/siteinfo/avatar.jpg" alt="Hxmeie Blog" /></td>
   </tr>
 </table>
 
@@ -168,4 +168,4 @@ excerpt: 本文为 Markdown实用技巧 系列文章的基础内容。自从接�
 
 [Markdown－基础语法](http://www.markdown.cn/)
 
-[markdown-grammar]: "Markdown实用技巧－语法"
+[markdown-grammar]: /blog/markdown-grammar "Markdown实用技巧－语法"

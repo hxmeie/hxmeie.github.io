@@ -1,6 +1,6 @@
 ---
 layout: post
-category: Markdown
+category: Blog
 title: Markdown实用技巧－基础语法
 tags: Markdown
 keywords: Markdown,Markdown实用技巧,Markdown语法,GcsSloop, gcssloop
@@ -172,8 +172,8 @@ Markdown支持段内换行，如果你想进行段落内换行可以在上一行
       <td><a href="http://www.hxmeie.cn" target="_blank">Hxmeie</a></td>
     </tr>
     <tr class="alternate">
-      <td>![GcsSloop Blog](http://www.hxmeie.cn/assets/siteinfo/avatar.jpg)</td>
-      <td><img src="http://www.hxmeie.cn/assets/siteinfo/avatar.jpg" alt="GcsSloop Blog" /></td>
+      <td>![Hxmeie Blog](http://www.hxmeie.cn/assets/siteinfo/avatar.jpg)</td>
+      <td><img src="http://www.hxmeie.cn/assets/siteinfo/avatar.jpg" alt="Hxmeie Blog" /></td>
     </tr>
   </table>
 
