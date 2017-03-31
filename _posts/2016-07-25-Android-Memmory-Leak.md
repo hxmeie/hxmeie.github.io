@@ -2,7 +2,7 @@
 layout: post
 category: Blog
 title: Android 内存泄漏案例和解析
-date: 2016-02-08 10:08:22
+date: 2016-07-25 10:08:22
 tags: Android MemmoryLeak
 keywords: android website,Android内存泄漏
 excerpt: Android 编程所使用的 Java 是一门使用垃圾收集器（GC, garbage collection）来自动管理内存的语言，它使得我们不再需要手动调用代码来进行内存回收。那么它是如何判断的呢？

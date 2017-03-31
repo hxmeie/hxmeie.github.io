@@ -2,7 +2,7 @@
 layout: post
 category: Blog
 title: Android屏幕适配(一)
-date: 2016-02-15 19:35:41
+date: 2016-09-13 19:35:41
 tags: Android
 keywords: android,Android屏幕适配,屏幕分辨率,Android开发px
 excerpt: Android 屏幕适配相关知识点和适配方法总结。
