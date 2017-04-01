@@ -2,7 +2,7 @@
 layout: post
 category: blog
 title: 来北京的这一年
-tags: hxmeie,info,the first year of Beijing
+tags: hxmeie,info,My-First-Year-of-Beijing
 keywords: hxmeie
 excerpt: 毕业近一年了，本来也没有想过会在今天写这篇毕业一年的经历，毕竟还有两个多月才算真正毕业一年呢。在今天写这篇总结的原因应该是很多原因促成的吧，或许是因为
 ---
