@@ -1,6 +1,6 @@
 ---
 layout: post
-category: blog
+category: Blog
 title: 来北京的这一年
 tags: hxmeie,info,My-First-Year-of-Beijing
 keywords: hxmeie
