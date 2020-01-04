@@ -15,7 +15,7 @@ Stormzhang：[Android 屏幕适配](http://stormzhang.com/android/2014/05/16/and
 凯子： [Android屏幕适配全攻略(最权威的官方适配指导)](http://blog.csdn.net/zhaokaiqiang1992/article/details/45419023)
 
 ## 概览
-![Android屏幕适配概览](http://oh5e02e3y.bkt.clouddn.com/Android%E5%B1%8F%E5%B9%95%E9%80%82%E9%85%8D%E6%A6%82%E8%A7%88.png)
+![Android屏幕适配概览](https://raw.githubusercontent.com/hxmeie/tuchuang/master/images/Android%E5%B1%8F%E5%B9%95%E9%80%82%E9%85%8D%E6%A6%82%E8%A7%88.png)
 
 ## 为什么要屏幕适配
 
@@ -71,13 +71,13 @@ Android手机常见的尺寸有5寸、5.5寸、6寸等等
 
 一部手机的分辨率是宽x高，屏幕大小是以寸为单位，那么三者的关系是：
 
-![三者关系](http://oh5e02e3y.bkt.clouddn.com/image/%E5%B1%8F%E5%B9%95%E5%B0%BA%E5%AF%B8-%E5%88%86%E8%BE%A8%E7%8E%87-%E5%83%8F%E7%B4%A0%E5%AF%86%E5%BA%A6-%E5%85%B3%E7%B3%BB.png)
+![三者关系](https://raw.githubusercontent.com/hxmeie/tuchuang/master/images/%E5%B1%8F%E5%B9%95%E5%B0%BA%E5%AF%B8-%E5%88%86%E8%BE%A8%E7%8E%87-%E5%83%8F%E7%B4%A0%E5%AF%86%E5%BA%A6-%E5%85%B3%E7%B3%BB.png)
 
 *例子：*
 
 假设一部手机的分辨率是1080x1920（px），屏幕大小是5寸，问密度是多少？
 
-![密度计算](http://oh5e02e3y.bkt.clouddn.com/image/%E5%AF%86%E5%BA%A6%E8%AE%A1%E7%AE%97.png)
+![密度计算](https://raw.githubusercontent.com/hxmeie/tuchuang/master/images/%E5%AF%86%E5%BA%A6%E8%AE%A1%E7%AE%97.png)
 
 **5、密度无关像素**
 
@@ -115,7 +115,7 @@ Android开发时用此单位设置文字大小，可根据字体大小首选项�
 
 **如何进行屏幕尺寸匹配？**
 
-![屏幕尺寸适配解决方案](http://oh5e02e3y.bkt.clouddn.com/image/%E5%B1%8F%E5%B9%95%E5%B0%BA%E5%AF%B8%E9%80%82%E9%85%8D%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.png)
+![屏幕尺寸适配解决方案](https://raw.githubusercontent.com/hxmeie/tuchuang/master/images/%E5%B1%8F%E5%B9%95%E5%B0%BA%E5%AF%B8%E9%80%82%E9%85%8D%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.png)
 
 **“布局”匹配**
 

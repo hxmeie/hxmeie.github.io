@@ -135,4 +135,4 @@ public class MyActivity extends RxActivity {
 **内存泄漏的检测**
 
 前面说了不少内存泄漏的场景和对应的解决办法，但如果我们不知不觉中写出了带有内存泄漏隐患的代码怎么办，面对这个问题，其实到现在，我们是很幸运的，因为有很多相关的检查方式或组件可以选择，比如最简单的：观察 Memory Monitor 内存走势图，可以或多或少知道内存情况，但如果要精确地追踪到内存泄漏点，这里特别推荐伟大的 Square 公司开源的 [LeakCanary](https://github.com/square/leakcanary) 方案，LeakCanary 可以做到非常简单方便、低侵入性地捕获内存泄漏代码，甚至很多时候你可以捕捉到 Android 官方组件的内存泄漏代码，具体使用大家可以自行参看其说明。
-![LeakCanary ](https://github.com/square/leakcanary/raw/master/assets/screenshot.png)
+![LeakCanary ](https://raw.githubusercontent.com/hxmeie/tuchuang/master/images/20200104141613.png)
