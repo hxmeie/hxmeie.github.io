@@ -22,6 +22,8 @@ blog_button:
     title: 博客
     description: 访问博客
 
+future: true
+
 nav:
     - {title: 目录,        in_site: true,  description: 博客目录,               url: '/timeline'}
     - {title: GitHub,     in_site: false,  description: hxmeie的github,    url: 'https://github.com/hxmeie'}
