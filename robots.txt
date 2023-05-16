@@ -1,4 +1,0 @@
-User-agent: *
-Disallow:
-Disallow: /doc
-Sitemap: http://www.hxmeie.cn/sitemap.xml
