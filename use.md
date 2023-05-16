@@ -11,3 +11,11 @@
 4、我的博客模板会出现中文编码错误，查看笔记“ruby编译scss出现invalid GBK错误”
 
 报错 webrick https://zhuanlan.zhihu.com/p/350462079
+
+
+
+使用：
+
+创建blog： jekyll new myblog
+
+启动服务：jekyll server, 浏览器打开http://localhost:4000
