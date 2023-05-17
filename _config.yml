@@ -22,7 +22,7 @@ title: 哆啦A梦小短腿 # the main title
 
 tagline: 时间不在于你拥有多少，而在于你怎样使用 # it will display as the sub-title
 
-description: 还不知道写点什么，后面再说 # used by seo meta and the atom feed
+description: 时间不在于你拥有多少，而在于你怎样使用 # used by seo meta and the atom feed
   
 # fill in the protocol & hostname for your site, e.g., 'https://username.github.io'
 url: "https://hxmeie.github.io"
@@ -87,7 +87,7 @@ avatar: /assets/img/favicons/android-chrome-512x512.png
 toc: true
 
 comments:
-  active: # The global switch for posts comments, e.g., 'disqus'.  Keep it empty means disable
+  active: giscus # The global switch for posts comments, e.g., 'disqus'.  Keep it empty means disable
   # The active options are as follows:
   disqus:
     shortname: # fill with the Disqus shortname. › https://help.disqus.com/en/articles/1717111-what-s-a-shortname
@@ -97,12 +97,12 @@ comments:
     issue_term: # < url | pathname | title | ...>
   # Giscus options › https://giscus.app
   giscus:
-    repo: # <gh-username>/<repo>
-    repo_id:
-    category:
-    category_id:
-    mapping: # optional, default to 'pathname'
-    input_position: # optional, default to 'bottom'
+    repo: hxmeie/hxmeie.github.io # <gh-username>/<repo>
+    repo_id: MDEwOlJlcG9zaXRvcnk3NzQ5ODcxNg==
+    category: Announcements
+    category_id: DIC_kwDOBJ6JXM4CWiw8
+    mapping: pathname # optional, default to 'pathname'
+    input_position: top # optional, default to 'bottom'
     lang: # optional, default to the value of `site.lang`
     reactions_enabled: # optional, default to the value of `1`
 
@@ -189,6 +189,7 @@ exclude:
   - rollup.config.js
   - node_modules
   - package*.json
+  - UpgradeGuide.md
 
 jekyll-archives:
   enabled: [categories, tags]
