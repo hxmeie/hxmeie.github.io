@@ -1,11 +1,9 @@
 ---
-layout: post
-category: Blog
+categories: [Blog]
 title: Android 内存泄漏案例和解析
-date: 2016-07-25 10:08:22
-tags: Android MemmoryLeak
-keywords: android website,Android内存泄漏
-excerpt: Android 编程所使用的 Java 是一门使用垃圾收集器（GC, garbage collection）来自动管理内存的语言，它使得我们不再需要手动调用代码来进行内存回收。那么它是如何判断的呢？
+date: 2016-07-25 10:08:22 +0800
+tags: [android,memmory leak]
+keywords: [内存泄漏]
 ---
 Android 编程所使用的 Java 是一门使用垃圾收集器（GC, garbage collection）来自动管理内存的语言，它使得我们不再需要手动调用代码来进行内存回收。那么它是如何判断的呢？简单说，如果一个对象，从它的根节点开始不可达的话，那么这个对象就是没有引用的了，是会被垃圾收集器回收的，其中，所谓的 “根节点” 往往是一个线程，比如主线程。因此，**如果一个对象从它的根节点开始是可达的有引用的，但实际上它已经没有再使用了，是无用的，这样的对象就是内存泄漏的对象**，它会在内存中占据我们应用程序原本就不是很多的内存，导致程序变慢，甚至内存溢出（OOM）程序崩溃。
 

@@ -1,10 +1,9 @@
 ---
-layout: post
-category: Blog
+categories: [Blog]
 title: Markdown实用技巧－快速入门
-tags: Markdown
-keywords: Markdown,Markdown实用技巧,Markdown语法,GcsSloop, gcssloop
-excerpt: 本文为 Markdown实用技巧 系列文章的基础内容。自从接触了 Markdown 之后，就一直用 Markdown 作为自己的主要书写工具，不论是平时做一些简单的纪录，还是用来写博客，写文档都是非常方便。
+date: 2016-01-16 19:30:02 +0800
+tags: [markdown]
+keywords: [Markdown,Markdown实用技巧,Markdown语法]
 ---
 
 本文为 **Markdown实用技巧** 系列的基础文章，并没有不可描述的内容 (⊙ω⊙)

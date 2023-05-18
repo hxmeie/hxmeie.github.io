@@ -1,11 +1,9 @@
 ---
-layout: post
 category: DeepfaceLab 2.0
 title: DeepfaceLab 2.0 指南中文版
-date: 2023-05-16 15:56:33
-tags: AI
-keywords: 机器学习，深度学习，AI，视频换脸
-excerpt: DeepfaceLab 2.0指南中文版
+date: 2023-05-16 15:56:33 +0800
+tags: [机器学习,深度学习,AI换脸]
+keywords: [机器学习,深度学习,AI,视频换脸]
 ---
 
 ![](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202305161557161.png)

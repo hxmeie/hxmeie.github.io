@@ -1,11 +1,9 @@
 ---
-layout: post
-category: Blog
+categories: [Blog]
 title: Kotlin 单例模式推荐写法
-date: 2020-02-03 15:40:20
-tags: Kotlin
-keywords: Kotlin,kotlin,singleton
-excerpt: Kotlin单例模式的推荐写法,张涛在极客时间的视频中讲过
+date: 2020-02-03 15:40:20 +0800
+tags: [kotlin]
+keywords: [kotlin,singleton]
 ---
 
 ```kotlin

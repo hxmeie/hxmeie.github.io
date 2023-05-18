@@ -1,10 +1,9 @@
 ---
-layout: post
-category: Blog
+categories: [Blog]
 title: Markdown实用技巧－基础语法
-tags: Markdown
-keywords: Markdown,Markdown实用技巧,Markdown语法,GcsSloop, gcssloop
-excerpt: 本文为 Markdown实用技巧 系列文章的基础内容。为保证语法兼容性，本文只介绍基础语法，扩展语法等其它内容，会在后续的文章中单独介绍。  
+date: 2016-01-17 20:10:00 +0800
+tags: [markdown]
+keywords: [Markdown,Markdown实用技巧,Markdown语法]
 ---
 
 本文为 **Markdown实用技巧** 系列的基础文章，并没有不可描述的内容 (⊙ω⊙)

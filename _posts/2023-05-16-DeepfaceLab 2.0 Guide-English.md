@@ -1,11 +1,9 @@
 ---
-layout: post
-category: DeepfaceLab 2.0
+categories: [DeepfaceLab 2.0]
 title: DeepfaceLab 2.0 指南英文
-date: 2023-05-16 15:54:33
-tags: AI
-keywords: 机器学习，深度学习，AI，视频换脸
-excerpt: DeepFaceLab 2.0 Guide to Making Deepfakes
+date: 2023-05-16 15:54:33 +0800
+tags: [机器学习,深度学习,AI换脸]
+keywords: [机器学习,深度学习,AI,视频换脸]
 ---
 
 If you’re wondering how to make a deepfake you’ve come to the right place! This DeepFaceLab guide will serve as both a reference and a step-by-step tutorial covering the entire process. DeepFaceLab can be used for a variety of applications, from entertainment and professional productions to custom implementations and deep learning research. By following the steps and suggestions laid out in this document, you will be able to create state of the art deepfakes using a PC or a cloud computing platform.

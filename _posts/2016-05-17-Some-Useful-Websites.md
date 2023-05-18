@@ -1,11 +1,9 @@
 ---
-layout: post
-category: Blog
+categories: [Blog]
 title: Android开发中一些有用的网站
-date: 2016-05-17 10:08:22
-tags: Tools
-keywords: android website,Android网站,学习Android,Android开发
-excerpt: 收集Android开发相关的网站,做一下记录
+date: 2016-05-17 10:08:22 +0800
+tags: [android]
+keywords: [Android网站,Android开发]
 ---
 
 ### 1、[干货集中营](http://gank.io/)
