@@ -2,12 +2,14 @@
 categories: [Blog]
 title: Android开发中一些有用的网站
 date: 2016-05-17 10:08:22 +0800
+last_modified_at: 2023-05-19 13:00:00 +0800
 tags: [android]
 keywords: [Android网站,Android开发]
 ---
-
 ### 1、[干货集中营](http://gank.io/)
 每日分享妹子图 和 技术干货，还有供大家中午休息的休闲视频
+>时隔近7年，这个网站已经打不开了，当初学习热情高涨，每天都会看这个网站推荐的开源库和图片，后来慢慢的不再看了，如今无法访问了，怀念啊
+{: .prompt-warning }
 
 ### 2、[掘金](https://gold.xitu.io/)
 掘金 · 一个只有高手分享的技术社区
