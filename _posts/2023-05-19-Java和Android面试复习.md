@@ -6,6 +6,9 @@ pin: true
 last_modified_at: 2023-05-22 09:39:00 +0800
 tags: [复习]
 keywords: [面试,Android]
+image:
+    path: https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202305221158527.png
+    alt: Java和Android面试复习
 ---
 
 ### Java部分
