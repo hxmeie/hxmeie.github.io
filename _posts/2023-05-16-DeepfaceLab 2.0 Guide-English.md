@@ -2,7 +2,8 @@
 categories: [DeepfaceLab 2.0]
 title: DeepfaceLab 2.0 指南英文
 date: 2023-05-16 15:54:33 +0800
-tags: [机器学习,深度学习,AI换脸]
+last_modified_at: 2023-05-23 10:38:00 +0800
+tags: [AI]
 keywords: [机器学习,深度学习,AI,视频换脸]
 ---
 

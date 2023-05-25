@@ -4,7 +4,7 @@ title: ViewModel的实现原理
 date: 2023-05-19 13:28:00 +0800
 last_modified_at: 2023-05-22 11:53:00 +0800
 tags: [转载,复习]
-keywords: [面试,Android]
+keywords: [面试,Android,ViewModel]
 image:
   path: https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202305221152233.jpeg
   lqip: /assets/img/placeholder.webp

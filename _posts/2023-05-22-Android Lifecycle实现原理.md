@@ -4,7 +4,7 @@ title: Android Lifecycle实现原理
 date: 2023-05-22 13:49:00 +0800
 last_modified_at: 
 tags: [转载,复习]
-keywords: [面试,Android]
+keywords: [面试,Android,lifecycle]
 image:
   path: https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202305221346402.jpg
   lqip: /assets/img/placeholder.webp
