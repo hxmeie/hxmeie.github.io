@@ -58,17 +58,17 @@ Choreographer的初始化是使用ThreadLocal，可以看到，在ThreadLocal的
 ```java
 // Thread local storage for the choreographer.
 private static final ThreadLocal<Choreographer> sThreadInstance =
-        new ThreadLocal<Choreographer>() {
-    @Override
-    protected Choreographer initialValue() {
-        // 获取当前线程Looper
-        Looper looper = Looper.myLooper();
-        if (looper == null) {
-            throw new IllegalStateException("The current thread must have a looper!");
-        }
-        // 实例化Choreographer
-        return new Choreographer(looper);
+  new ThreadLocal<Choreographer>() {
+  @Override
+  protected Choreographer initialValue() {
+    // 获取当前线程Looper
+    Looper looper = Looper.myLooper();
+    if (looper == null) {
+      throw new IllegalStateException("The current thread must have a looper!");
     }
+    // 实例化Choreographer
+    return new Choreographer(looper);
+  }
 };
 ```
 
@@ -80,7 +80,7 @@ private static final ThreadLocal<Choreographer> sThreadInstance =
 
 ```java
 public static Choreographer getInstance() {
-    return sThreadInstance.get();
+  return sThreadInstance.get();
 }
 ```
 
@@ -88,7 +88,7 @@ public static Choreographer getInstance() {
 
 ```java
 public ViewRootImpl(Context context, Display display) {
-    ...
+  ...
     mChoreographer = Choreographer.getInstance();
 
 }
@@ -98,46 +98,46 @@ Choreographer的构造方法如下：
 
 ```java
 private Choreographer(Looper looper) {
-    mLooper = looper;
-    // 初始化FrameHandler
-    mHandler = new FrameHandler(looper);
-    // 根据是否使用了VSYNC来创建一个FrameDisplayEventReceiver
-    mDisplayEventReceiver = USE_VSYNC ? new FrameDisplayEventReceiver(looper) : null;
-    mLastFrameTimeNanos = Long.MIN_VALUE;
+  mLooper = looper;
+  // 初始化FrameHandler
+  mHandler = new FrameHandler(looper);
+  // 根据是否使用了VSYNC来创建一个FrameDisplayEventReceiver
+  mDisplayEventReceiver = USE_VSYNC ? new FrameDisplayEventReceiver(looper) : null;
+  mLastFrameTimeNanos = Long.MIN_VALUE;
 
-    mFrameIntervalNanos = (long)(1000000000 / getRefreshRate());
-    // CALLBACK_LAST + 1 = 4，创建一个容量为4的CallbackQueue数组，用来存放4种不同的Callback
-    mCallbackQueues = new CallbackQueue[CALLBACK_LAST + 1];
-    for (int i = 0; i <= CALLBACK_LAST; i++) {
-        mCallbackQueues[i] = new CallbackQueue();
-    }
+  mFrameIntervalNanos = (long)(1000000000 / getRefreshRate());
+  // CALLBACK_LAST + 1 = 4，创建一个容量为4的CallbackQueue数组，用来存放4种不同的Callback
+  mCallbackQueues = new CallbackQueue[CALLBACK_LAST + 1];
+  for (int i = 0; i <= CALLBACK_LAST; i++) {
+    mCallbackQueues[i] = new CallbackQueue();
+  }
 }
 ```
 上述代码中先创建了一个Handler，接着使用USE_VSYNC查看是否使用了Vsync同步机制。如果是，则创建一个FrameDisplayEventReceiver对象用来请求并接受Vsync事件。
 
 接着，创建了一个大小为4的数组，用于保存不同类型的Callback,有如下四种：
 ```java
-    /**
-     *输入Callback类型，Runs first.
-     */
-    public static final int CALLBACK_INPUT = 0; 
+/**
+ *输入Callback类型，Runs first.
+ */
+public static final int CALLBACK_INPUT = 0; 
 
-    /**
-     * 动画Callback类型，Runs before traversals.
-     */
-    public static final int CALLBACK_ANIMATION = 1;
+/**
+ * 动画Callback类型，Runs before traversals.
+ */
+public static final int CALLBACK_ANIMATION = 1;
 
-    /**
-     * View绘制Callback类型，处理layout和draw.  Runsafter all other 
-     * asynchronous messages have been handled.
-     */
-    public static final int CALLBACK_TRAVERSAL = 2;
+/**
+ * View绘制Callback类型，处理layout和draw.  Runsafter all other 
+ * asynchronous messages have been handled.
+ */
+public static final int CALLBACK_TRAVERSAL = 2;
 
-    /**
-     * 提交Callback类型.  Handles post-draw operations for the frame.
-     * Runs after traversal completes.  
-     */
-    public static final int CALLBACK_COMMIT = 3;
+/**
+ * 提交Callback类型.  Handles post-draw operations for the frame.
+ * Runs after traversal completes.  
+ */
+public static final int CALLBACK_COMMIT = 3;
 ```
 
 
@@ -148,58 +148,58 @@ Vsync的注册、申请、接收都是通过FrameDisplayEventReceiver实现的�
 
 ```java
 private final class FrameDisplayEventReceiver extends DisplayEventReceiver
-        implements Runnable {
-    private boolean mHavePendingVsync;
-    private long mTimestampNanos;
-    private int mFrame;
+  implements Runnable {
+  private boolean mHavePendingVsync;
+  private long mTimestampNanos;
+  private int mFrame;
 
-    public FrameDisplayEventReceiver(Looper looper) {
-        super(looper);
+  public FrameDisplayEventReceiver(Looper looper) {
+    super(looper);
+  }
+
+  // Vsync信号回调
+  @Override
+  public void onVsync(long timestampNanos, int builtInDisplayId, int frame) {
+
+    if (builtInDisplayId != SurfaceControl.BUILT_IN_DISPLAY_ID_MAIN) {
+      // 请求Vsync信号
+      scheduleVsync();
+      return;
     }
 
-    // Vsync信号回调
-    @Override
-    public void onVsync(long timestampNanos, int builtInDisplayId, int frame) {
-
-        if (builtInDisplayId != SurfaceControl.BUILT_IN_DISPLAY_ID_MAIN) {
-            // 请求Vsync信号
-            scheduleVsync();
-            return;
-        }
-
-        long now = System.nanoTime();
-        if (timestampNanos > now) {
-            Log.w(TAG, "Frame time is " + ((timestampNanos - now) * 0.000001f)
-                    + " ms in the future!  Check that graphics HAL is generating vsync "
-                    + "timestamps using the correct timebase.");
-            timestampNanos = now;
-        }
-
-        if (mHavePendingVsync) {
-            Log.w(TAG, "Already have a pending vsync event.  There should only be "
-                    + "one at a time.");
-        } else {
-            mHavePendingVsync = true;
-        }
-
-        mTimestampNanos = timestampNanos;
-        mFrame = frame;
-        Message msg = Message.obtain(mHandler, this);
-        msg.setAsynchronous(true);
-        mHandler.sendMessageAtTime(msg, timestampNanos / TimeUtils.NANOS_PER_MS);
+    long now = System.nanoTime();
+    if (timestampNanos > now) {
+      Log.w(TAG, "Frame time is " + ((timestampNanos - now) * 0.000001f)
+            + " ms in the future!  Check that graphics HAL is generating vsync "
+            + "timestamps using the correct timebase.");
+      timestampNanos = now;
     }
-    // scheduleVsync方法位于DisplayEventReceiver中，用来请求Vsync信号,如下
-    // public void scheduleVsync() {
-    //    ...
-    //    nativeScheduleVsync(mReceiverPtr);
-    // }  
 
-    // 执行doFrame
-    @Override
-    public void run() {
-        mHavePendingVsync = false;
-        doFrame(mTimestampNanos, mFrame);
+    if (mHavePendingVsync) {
+      Log.w(TAG, "Already have a pending vsync event.  There should only be "
+            + "one at a time.");
+    } else {
+      mHavePendingVsync = true;
     }
+
+    mTimestampNanos = timestampNanos;
+    mFrame = frame;
+    Message msg = Message.obtain(mHandler, this);
+    msg.setAsynchronous(true);
+    mHandler.sendMessageAtTime(msg, timestampNanos / TimeUtils.NANOS_PER_MS);
+  }
+  // scheduleVsync方法位于DisplayEventReceiver中，用来请求Vsync信号,如下
+  // public void scheduleVsync() {
+  //    ...
+  //    nativeScheduleVsync(mReceiverPtr);
+  // }  
+
+  // 执行doFrame
+  @Override
+  public void run() {
+    mHavePendingVsync = false;
+    doFrame(mTimestampNanos, mFrame);
+  }
 }
 ```
 
@@ -210,10 +210,9 @@ private final class FrameDisplayEventReceiver extends DisplayEventReceiver
 ```java
 // android/view/DisplayEventReceiver.java
 public DisplayEventReceiver(Looper looper, int vsyncSource) {
-    ......
+  ......
     mMessageQueue = looper.getQueue();
-    mReceiverPtr = nativeInit(new WeakReference<DisplayEventReceiver>(this), mMessageQueue,
-            vsyncSource);
+  mReceiverPtr = nativeInit(new WeakReference<DisplayEventReceiver>(this), mMessageQueue,vsyncSource);
 }
 ```
 
@@ -235,24 +234,23 @@ Choreographer 处理绘制的逻辑核心在 Choreographer.doFrame 方法中，F
 
 ```java
 void doFrame(long frameTimeNanos, int frame) {
-    final long startNanos;
-    synchronized (mLock) {
-        ... 
-          
-        long intendedFrameTimeNanos = frameTimeNanos;
-        startNanos = System.nanoTime();
-        final long jitterNanos = startNanos - frameTimeNanos;
-        if (jitterNanos >= mFrameIntervalNanos) {
-            final long skippedFrames = jitterNanos / mFrameIntervalNanos;
-            if (skippedFrames >= SKIPPED_FRAME_WARNING_LIMIT) {
-                Log.i(TAG, "Skipped " + skippedFrames + " frames!  "
-                        + "The application may be doing too much work on its main thread.");
-            }
-            ...
-        }
+  final long startNanos;
+  synchronized (mLock) {
+    ... 
+    long intendedFrameTimeNanos = frameTimeNanos;
+    startNanos = System.nanoTime();
+    final long jitterNanos = startNanos - frameTimeNanos;
+    if (jitterNanos >= mFrameIntervalNanos) {
+      final long skippedFrames = jitterNanos / mFrameIntervalNanos;
+      if (skippedFrames >= SKIPPED_FRAME_WARNING_LIMIT) {
+        Log.i(TAG, "Skipped " + skippedFrames + " frames!  "
+              + "The application may be doing too much work on its main thread.");
+      }
+      ...
+    }
 
-       ...
-}
+    ...
+  }
 ```
 
 Vsync 信号到来的时候会标记一个 start_time ，执行 doFrame 的时候标记一个 end_time ，这两个时间差就是 Vsync 处理时延，也就是掉帧。
@@ -269,17 +267,17 @@ doFrame 函数记录从 Vsync time 到 markPerformTraversalsStart 的时间
 
 ```java
 void doFrame(long frameTimeNanos, int frame) {
-    ...
-    mFrameInfo.setVsync(intendedFrameTimeNanos, frameTimeNanos);
-    // 处理 CALLBACK_INPUT Callbacks 
-    mFrameInfo.markInputHandlingStart();
-    // 处理 CALLBACK_ANIMATION Callbacks
-    mFrameInfo.markAnimationsStart();
-    // 处理 CALLBACK_INSETS_ANIMATION Callbacks
-    // 处理 CALLBACK_TRAVERSAL Callbacks
-    mFrameInfo.markPerformTraversalsStart();
-    // 处理 CALLBACK_COMMIT Callbacks
-    ...
+  ...
+  mFrameInfo.setVsync(intendedFrameTimeNanos, frameTimeNanos);
+  // 处理 CALLBACK_INPUT Callbacks 
+  mFrameInfo.markInputHandlingStart();
+  // 处理 CALLBACK_ANIMATION Callbacks
+  mFrameInfo.markAnimationsStart();
+  // 处理 CALLBACK_INSETS_ANIMATION Callbacks
+  // 处理 CALLBACK_TRAVERSAL Callbacks
+  mFrameInfo.markPerformTraversalsStart();
+  // 处理 CALLBACK_COMMIT Callbacks
+  ...
 }
 ```
 
@@ -289,18 +287,18 @@ void doFrame(long frameTimeNanos, int frame) {
 
 ```java
 void doFrame(long frameTimeNanos, int frame) {
-    ...
-    // 处理 CALLBACK_INPUT Callbacks 
-    doCallbacks(Choreographer.CALLBACK_INPUT, frameTimeNanos);
-    // 处理 CALLBACK_ANIMATION Callbacks
-    doCallbacks(Choreographer.CALLBACK_ANIMATION, frameTimeNanos);
-    // 处理 CALLBACK_INSETS_ANIMATION Callbacks
-    doCallbacks(Choreographer.CALLBACK_INSETS_ANIMATION, frameTimeNanos);
-    // 处理 CALLBACK_TRAVERSAL Callbacks
-    doCallbacks(Choreographer.CALLBACK_TRAVERSAL, frameTimeNanos);
-    // 处理 CALLBACK_COMMIT Callbacks
-    doCallbacks(Choreographer.CALLBACK_COMMIT, frameTimeNanos);
-    ...
+  ...
+  // 处理 CALLBACK_INPUT Callbacks 
+  doCallbacks(Choreographer.CALLBACK_INPUT, frameTimeNanos);
+  // 处理 CALLBACK_ANIMATION Callbacks
+  doCallbacks(Choreographer.CALLBACK_ANIMATION, frameTimeNanos);
+  // 处理 CALLBACK_INSETS_ANIMATION Callbacks
+  doCallbacks(Choreographer.CALLBACK_INSETS_ANIMATION, frameTimeNanos);
+  // 处理 CALLBACK_TRAVERSAL Callbacks
+  doCallbacks(Choreographer.CALLBACK_TRAVERSAL, frameTimeNanos);
+  // 处理 CALLBACK_COMMIT Callbacks
+  doCallbacks(Choreographer.CALLBACK_COMMIT, frameTimeNanos);
+  ...
 }
 ```
 
@@ -311,22 +309,22 @@ void doFrame(long frameTimeNanos, int frame) {
 ```java
 // android/view/ViewRootImpl.java
 final class ConsumeBatchedInputRunnable implements Runnable {
-    @Override
-    public void run() {
-        doConsumeBatchedInput(mChoreographer.getFrameTimeNanos());
-    }
+  @Override
+  public void run() {
+    doConsumeBatchedInput(mChoreographer.getFrameTimeNanos());
+  }
 }
 void doConsumeBatchedInput(long frameTimeNanos) {
-    if (mConsumeBatchedInputScheduled) {
-        mConsumeBatchedInputScheduled = false;
-        if (mInputEventReceiver != null) {
-            if (mInputEventReceiver.consumeBatchedInputEvents(frameTimeNanos)
-                    && frameTimeNanos != -1) {
-                scheduleConsumeBatchedInput();
-            }
-        }
-        doProcessInputEvents();
+  if (mConsumeBatchedInputScheduled) {
+    mConsumeBatchedInputScheduled = false;
+    if (mInputEventReceiver != null) {
+      if (mInputEventReceiver.consumeBatchedInputEvents(frameTimeNanos)
+          && frameTimeNanos != -1) {
+        scheduleConsumeBatchedInput();
+      }
     }
+    doProcessInputEvents();
+  }
 }
 ```
 
@@ -337,13 +335,13 @@ Input 时间经过处理，最终会传给 DecorView 的 dispatchTouchEvent，�
 ```java
 // android/view/ViewRootImpl.java
 void scheduleTraversals() {
-    if (!mTraversalScheduled) {
-        mTraversalScheduled = true;
-        
-        mTraversalBarrier = mHandler.getLooper().getQueue().postSyncBarrier();
-        mChoreographer.postCallback(
-                Choreographer.CALLBACK_TRAVERSAL, mTraversalRunnable, null);
-    }
+  if (!mTraversalScheduled) {
+    mTraversalScheduled = true;
+
+    mTraversalBarrier = mHandler.getLooper().getQueue().postSyncBarrier();
+    mChoreographer.postCallback(
+      Choreographer.CALLBACK_TRAVERSAL, mTraversalRunnable, null);
+  }
 }
 ```
 

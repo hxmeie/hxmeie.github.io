@@ -18,140 +18,140 @@ HandlerThread 自带 Looper 使它可以通过消息队列来重复使用当前�
 ```java
 public class HandlerThreadActivity extends AppCompatActivity {
 
-    private Button mButton;
-    private HandlerThread mHandlerThread;
-    private Handler mUiHandler;
-    private Handler mChildHandler;
+  private Button mButton;
+  private HandlerThread mHandlerThread;
+  private Handler mUiHandler;
+  private Handler mChildHandler;
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_handler);
-        initView();
+  @Override
+  protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_handler);
+    initView();
 
-        mHandlerThread = new HandlerThread("HandlerThread");
-        mHandlerThread.start();
-        mUiHandler = new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-                if (msg.what == 2) {
-                    mButton.setText("子线程更新");
-                }
-                return false;
-            }
-        });
-        mChildHandler = new Handler(mHandlerThread.getLooper(), new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-                if (msg.what == 1) {
-                    try {
-                        //子线程模拟延迟处理
-                        Thread.sleep(2000);
-                        mUiHandler.sendEmptyMessage(2);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                return false;
-            }
-        });
+    mHandlerThread = new HandlerThread("HandlerThread");
+    mHandlerThread.start();
+    mUiHandler = new Handler(new Handler.Callback() {
+      @Override
+      public boolean handleMessage(Message msg) {
+        if (msg.what == 2) {
+          mButton.setText("子线程更新");
+        }
+        return false;
+      }
+    });
+    mChildHandler = new Handler(mHandlerThread.getLooper(), new Handler.Callback() {
+      @Override
+      public boolean handleMessage(Message msg) {
+        if (msg.what == 1) {
+          try {
+            //子线程模拟延迟处理
+            Thread.sleep(2000);
+            mUiHandler.sendEmptyMessage(2);
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
+        }
+        return false;
+      }
+    });
 
-    }
+  }
 
-    public void initView() {
-        mButton = findViewById(R.id.btn_show);
-        mButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mChildHandler.sendEmptyMessage(1);
-            }
-        });
-    }
+  public void initView() {
+    mButton = findViewById(R.id.btn_show);
+    mButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        mChildHandler.sendEmptyMessage(1);
+      }
+    });
+  }
 }
 ```
 
 ### 源码分析
 ```java
 public class HandlerThread extends Thread {
-    int mPriority;
-    int mTid = -1;
-    Looper mLooper;
-    private @Nullable Handler mHandler;
+  int mPriority;
+  int mTid = -1;
+  Looper mLooper;
+  private @Nullable Handler mHandler;
 
-    public HandlerThread(String name) {
-        super(name);
-        mPriority = Process.THREAD_PRIORITY_DEFAULT;
-    }
-    
-    public HandlerThread(String name, int priority) {
-        super(name);
-        mPriority = priority;
-    }
-    
-    protected void onLooperPrepared() {
-    }
+  public HandlerThread(String name) {
+    super(name);
+    mPriority = Process.THREAD_PRIORITY_DEFAULT;
+  }
 
-    @Override
-    public void run() {
-        mTid = Process.myTid();
-        Looper.prepare();
-        synchronized (this) {
-            mLooper = Looper.myLooper();
-          	// 通知取 Looper 的线程，此时 Looper 已经创建好了
-            notifyAll();
-        }
-        Process.setThreadPriority(mPriority);
-        onLooperPrepared();
-        Looper.loop();
-        mTid = -1;
+  public HandlerThread(String name, int priority) {
+    super(name);
+    mPriority = priority;
+  }
+
+  protected void onLooperPrepared() {
+  }
+
+  @Override
+  public void run() {
+    mTid = Process.myTid();
+    Looper.prepare();
+    synchronized (this) {
+      mLooper = Looper.myLooper();
+      // 通知取 Looper 的线程，此时 Looper 已经创建好了
+      notifyAll();
     }
-    
-    public Looper getLooper() {
-        if (!isAlive()) {
-            return null;
-        }
-        
-        synchronized (this) {
-            while (isAlive() && mLooper == null) {
-                try {
-                  	// 如果新线程还未创建 Looper，则等待
-                    wait();
-                } catch (InterruptedException e) {
-                }
-            }
-        }
-        return mLooper;
+    Process.setThreadPriority(mPriority);
+    onLooperPrepared();
+    Looper.loop();
+    mTid = -1;
+  }
+
+  public Looper getLooper() {
+    if (!isAlive()) {
+      return null;
     }
 
-    @NonNull
-    public Handler getThreadHandler() {
-        if (mHandler == null) {
-            mHandler = new Handler(getLooper());
+    synchronized (this) {
+      while (isAlive() && mLooper == null) {
+        try {
+          // 如果新线程还未创建 Looper，则等待
+          wait();
+        } catch (InterruptedException e) {
         }
-        return mHandler;
+      }
     }
+    return mLooper;
+  }
 
-    public boolean quit() {
-        Looper looper = getLooper();
-        if (looper != null) {
-            looper.quit();
-            return true;
-        }
-        return false;
+  @NonNull
+  public Handler getThreadHandler() {
+    if (mHandler == null) {
+      mHandler = new Handler(getLooper());
     }
+    return mHandler;
+  }
 
-    public boolean quitSafely() {
-        Looper looper = getLooper();
-        if (looper != null) {
-            looper.quitSafely();
-            return true;
-        }
-        return false;
+  public boolean quit() {
+    Looper looper = getLooper();
+    if (looper != null) {
+      looper.quit();
+      return true;
     }
+    return false;
+  }
 
-    public int getThreadId() {
-        return mTid;
+  public boolean quitSafely() {
+    Looper looper = getLooper();
+    if (looper != null) {
+      looper.quitSafely();
+      return true;
     }
+    return false;
+  }
+
+  public int getThreadId() {
+    return mTid;
+  }
 }
 ```
 源码很简单，就是在 run 方法中执行 Looper.prepare()、Looper.loop() 构造消息循环系统。外界可以通过 getLooper() 这个方法拿到这个 Looper。

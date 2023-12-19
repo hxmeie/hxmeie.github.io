@@ -52,22 +52,22 @@ class User implements Serializable {
 ```java
 public class UserModel extends ViewModel {
 
-    public final MutableLiveData<User> mUserLiveData = new MutableLiveData<>();
+  public final MutableLiveData<User> mUserLiveData = new MutableLiveData<>();
 
-    public UserModel() {
-        //模拟从网络加载用户信息
-        mUserLiveData.postValue(new User(1, "name1"));
-    }
+  public UserModel() {
+    //模拟从网络加载用户信息
+    mUserLiveData.postValue(new User(1, "name1"));
+  }
 
-    //模拟 进行一些数据骚操作
-    public void doSomething() {
-        User user = mUserLiveData.getValue();
-        if (user != null) {
-            user.age = 15;
-            user.name = "name15";
-            mUserLiveData.setValue(user);
-        }
+  //模拟 进行一些数据骚操作
+  public void doSomething() {
+    User user = mUserLiveData.getValue();
+    if (user != null) {
+      user.age = 15;
+      user.name = "name15";
+      mUserLiveData.setValue(user);
     }
+  }
 
 }
 ```
@@ -77,31 +77,31 @@ public class UserModel extends ViewModel {
 ```java
 public class MainActivity extends FragmentActivity {
 
-    private TextView mContentTv;
+  private TextView mContentTv;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
 
-        mContentTv = findViewById(R.id.tv_content);
+    mContentTv = findViewById(R.id.tv_content);
 
-        //构建ViewModel实例
-        final UserModel userModel = new ViewModelProvider(this).get(UserModel.class);
+    //构建ViewModel实例
+    final UserModel userModel = new ViewModelProvider(this).get(UserModel.class);
 
-        //让TextView观察ViewModel中数据的变化,并实时展示
-        userModel.mUserLiveData.observe(this, new Observer<User>() {
-            @Override
-            public void onChanged(User user) {
-                mContentTv.setText(user.toString());
-            }
-        });
+    //让TextView观察ViewModel中数据的变化,并实时展示
+    userModel.mUserLiveData.observe(this, new Observer<User>() {
+      @Override
+      public void onChanged(User user) {
+        mContentTv.setText(user.toString());
+      }
+    });
 
-       findViewById(R.id.btn_test).setOnClickListener(v->{
-            //点击按钮  更新User数据  观察TextView变化
-            userModel.doSomething();
-       });
-    }
+    findViewById(R.id.btn_test).setOnClickListener(v->{
+      //点击按钮  更新User数据  观察TextView变化
+      userModel.doSomething();
+    });
+  }
 }
 ```
 
@@ -113,11 +113,11 @@ Activity与Fragment可以共享一个ViewModel,因为Fragment是依附在Activit
 
 ```java
 public class MyFragment extends Fragment {
-     public void onStart() {
-        //这里拿到的ViewModel实例,其实是和Activity中创建的是一个实例
-         UserModel userModel = new ViewModelProvider(getActivity())
+  public void onStart() {
+    //这里拿到的ViewModel实例,其实是和Activity中创建的是一个实例
+    UserModel userModel = new ViewModelProvider(getActivity())
       .get(UserModel.class);
-     }
+  }
 }
 ```
 
@@ -131,9 +131,9 @@ public class MyFragment extends Fragment {
 
 ```java
 public ViewModelProvider(@NonNull ViewModelStoreOwner owner) {
-    this(owner.getViewModelStore(), owner instanceof HasDefaultViewModelProviderFactory
-            ? ((HasDefaultViewModelProviderFactory) owner).getDefaultViewModelProviderFactory()
-            : NewInstanceFactory.getInstance());
+  this(owner.getViewModelStore(), owner instanceof HasDefaultViewModelProviderFactory
+       ? ((HasDefaultViewModelProviderFactory) owner).getDefaultViewModelProviderFactory()
+       : NewInstanceFactory.getInstance());
 }
 ```
 
@@ -143,36 +143,36 @@ ViewModelProvider构造方法接受一个ViewModelStoreOwner类型的参数。Vi
 
 ```java
 public class ComponentActivity extends androidx.core.app.ComponentActivity implements
-        ViewModelStoreOwner,
-        HasDefaultViewModelProviderFactory{
-    @NonNull
-    @Override
-    public ViewModelStore getViewModelStore() {
-        if (getApplication() == null) {
-            throw new IllegalStateException("Your activity is not yet attached to the "
-                    + "Application instance. You can't request ViewModel before onCreate call.");
-        }
-        // 确保ViewModelStore不为空
-        ensureViewModelStore();
-        return mViewModelStore;
+  ViewModelStoreOwner,
+HasDefaultViewModelProviderFactory{
+  @NonNull
+  @Override
+  public ViewModelStore getViewModelStore() {
+    if (getApplication() == null) {
+      throw new IllegalStateException(
+        "Your activity is not yet attached to the "+ "Application instance. You can't request ViewModel before onCreate call.");
     }
+    // 确保ViewModelStore不为空
+    ensureViewModelStore();
+    return mViewModelStore;
+  }
 
-    @NonNull
-    @Override
-    // 创建了一个默认的ViewModelFactory
-    public ViewModelProvider.Factory getDefaultViewModelProviderFactory() {
-        if (getApplication() == null) {
-            throw new IllegalStateException("Your activity is not yet attached to the "
-                    + "Application instance. You can't request ViewModel before onCreate call.");
-        }
-        if (mDefaultFactory == null) {
-            mDefaultFactory = new SavedStateViewModelFactory(
-                    getApplication(),
-                    this,
-                    getIntent() != null ? getIntent().getExtras() : null);
-        }
-        return mDefaultFactory;
+  @NonNull
+  @Override
+  // 创建了一个默认的ViewModelFactory
+  public ViewModelProvider.Factory getDefaultViewModelProviderFactory() {
+    if (getApplication() == null) {
+      throw new IllegalStateException("Your activity is not yet attached to the "
+      + "Application instance. You can't request ViewModel before onCreate call.");
     }
+    if (mDefaultFactory == null) {
+      mDefaultFactory = new SavedStateViewModelFactory(
+        getApplication(),
+        this,
+        getIntent() != null ? getIntent().getExtras() : null);
+    }
+    return mDefaultFactory;
+  }
 
 }
 ```
@@ -181,19 +181,19 @@ ensureViewModelStore方法中如果ViewModelStore为null，则会尝试恢复或
 
 ```java
 void ensureViewModelStore() {
-    if (mViewModelStore == null) {
-        // 获取上次配置数据实例
-        NonConfigurationInstances nc =
-                (NonConfigurationInstances) getLastNonConfigurationInstance();
-        if (nc != null) {
-            // 从NonConfigurationInstances中恢复ViewModelStore
-            mViewModelStore = nc.viewModelStore;
-        }
-        // NonConfigurationInstances中没有保存那么就实例化ViewModelStore
-        if (mViewModelStore == null) {
-            mViewModelStore = new ViewModelStore();
-        }
+  if (mViewModelStore == null) {
+    // 获取上次配置数据实例
+    NonConfigurationInstances nc =
+      (NonConfigurationInstances) getLastNonConfigurationInstance();
+    if (nc != null) {
+      // 从NonConfigurationInstances中恢复ViewModelStore
+      mViewModelStore = nc.viewModelStore;
     }
+    // NonConfigurationInstances中没有保存那么就实例化ViewModelStore
+    if (mViewModelStore == null) {
+      mViewModelStore = new ViewModelStore();
+    }
+  }
 }
 ```
 
@@ -201,8 +201,8 @@ ViewModelProvider的构造方法最终调用了下边的这个重载的构造方
 
 ```java
 public ViewModelProvider(@NonNull ViewModelStore store, @NonNull Factory factory) {
-    mFactory = factory;
-    mViewModelStore = store;
+  mFactory = factory;
+  mViewModelStore = store;
 }
 ```
 
@@ -215,77 +215,77 @@ public ViewModelProvider(@NonNull ViewModelStore store, @NonNull Factory factory
 实例化了ViewModelProvider后会调用ViewModelProvider的get方法。代码如下：
 
 ```java
-    public <T extends ViewModel> T get(@NonNull Class<T> modelClass) {
-        String canonicalName = modelClass.getCanonicalName();
-				// ... 省略校验
-        return get(DEFAULT_KEY + ":" + canonicalName, modelClass);
-    }
+public <T extends ViewModel> T get(@NonNull Class<T> modelClass) {
+  String canonicalName = modelClass.getCanonicalName();
+  // ... 省略校验
+  return get(DEFAULT_KEY + ":" + canonicalName, modelClass);
+}
 
-    public <T extends ViewModel> T get(@NonNull String key, @NonNull Class<T> modelClass) {
-        ViewModel viewModel = mViewModelStore.get(key);
+public <T extends ViewModel> T get(@NonNull String key, @NonNull Class<T> modelClass) {
+  ViewModel viewModel = mViewModelStore.get(key);
 
-        if (modelClass.isInstance(viewModel)) {
-            if (mFactory instanceof OnRequeryFactory) {
-                ((OnRequeryFactory) mFactory).onRequery(viewModel);
-            }
-            return (T) viewModel;
-        } else {
-            //noinspection StatementWithEmptyBody
-            if (viewModel != null) {
-                // TODO: log a warning.
-            }
-        }
-        if (mFactory instanceof KeyedFactory) {
-            viewModel = ((KeyedFactory) mFactory).create(key, modelClass);
-        } else {
-            viewModel = mFactory.create(modelClass);
-        }
-        mViewModelStore.put(key, viewModel);
-        return (T) viewModel;
+  if (modelClass.isInstance(viewModel)) {
+    if (mFactory instanceof OnRequeryFactory) {
+      ((OnRequeryFactory) mFactory).onRequery(viewModel);
     }
+    return (T) viewModel;
+  } else {
+    //noinspection StatementWithEmptyBody
+    if (viewModel != null) {
+      // TODO: log a warning.
+    }
+  }
+  if (mFactory instanceof KeyedFactory) {
+    viewModel = ((KeyedFactory) mFactory).create(key, modelClass);
+  } else {
+    viewModel = mFactory.create(modelClass);
+  }
+  mViewModelStore.put(key, viewModel);
+  return (T) viewModel;
+}
 ```
 
 get方法中首先调用了mViewModelStore的get方法，并通过key来获取ViewModel。可见ViewModel本身应该是一个K-V的集合类。暂且不管ViewModelStore。接下来，如果modelClass已经实例化了，就直接返回ViewModel，否则就调用Factory来创建ViewModel，并将ViewModel存入ViewModelStore中。很显然，ViewModel的实例化时在Factory中进行的。ViewModelProvider的构造方法是允许我们自己传入一个工厂的，如果不传也会创建默认的工厂。本章的第一小节已经看到会默认实例化一个SavedStateViewModelFactory，这个工厂继承了KeyedFactory，我们来看下它的create是如何实现的：
 
 ```java
 public <T extends ViewModel> T create(@NonNull String key, @NonNull Class<T> modelClass) {
-    // 判断是不是AndroidViewModel类型
-    boolean isAndroidViewModel = AndroidViewModel.class.isAssignableFrom(modelClass);
-    Constructor<T> constructor;
-    // 获取ViewModel的构造方法
-    if (isAndroidViewModel && mApplication != null) {
-        // 查找ANDROID_VIEWMODEL_SIGNATURE对应的构造方法
-        constructor = findMatchingConstructor(modelClass, ANDROID_VIEWMODEL_SIGNATURE);
-    } else {
-        // 查找VIEWMODEL_SIGNATURE的构造方法
-        constructor = findMatchingConstructor(modelClass, VIEWMODEL_SIGNATURE);
-    }
-    // doesn't need SavedStateHandle
-    if (constructor == null) {
-        // 通过Factory去创建ViewModel
-        return mFactory.create(modelClass);
-    }
+  // 判断是不是AndroidViewModel类型
+  boolean isAndroidViewModel = AndroidViewModel.class.isAssignableFrom(modelClass);
+  Constructor<T> constructor;
+  // 获取ViewModel的构造方法
+  if (isAndroidViewModel && mApplication != null) {
+    // 查找ANDROID_VIEWMODEL_SIGNATURE对应的构造方法
+    constructor = findMatchingConstructor(modelClass, ANDROID_VIEWMODEL_SIGNATURE);
+  } else {
+    // 查找VIEWMODEL_SIGNATURE的构造方法
+    constructor = findMatchingConstructor(modelClass, VIEWMODEL_SIGNATURE);
+  }
+  // doesn't need SavedStateHandle
+  if (constructor == null) {
+    // 通过Factory去创建ViewModel
+    return mFactory.create(modelClass);
+  }
 
-    SavedStateHandleController controller = SavedStateHandleController.create(
-            mSavedStateRegistry, mLifecycle, key, mDefaultArgs);
-    try {
-        T viewmodel;
-        // 通过构造方法反射实例化ViewModel
-        if (isAndroidViewModel && mApplication != null) {
-            viewmodel = constructor.newInstance(mApplication, controller.getHandle());
-        } else {
-            viewmodel = constructor.newInstance(controller.getHandle());
-        }
-        viewmodel.setTagIfAbsent(TAG_SAVED_STATE_HANDLE_CONTROLLER, controller);
-        return viewmodel;
-    } catch (IllegalAccessException e) {
-        throw new RuntimeException("Failed to access " + modelClass, e);
-    } catch (InstantiationException e) {
-        throw new RuntimeException("A " + modelClass + " cannot be instantiated.", e);
-    } catch (InvocationTargetException e) {
-        throw new RuntimeException("An exception happened in constructor of "
-                + modelClass, e.getCause());
+  SavedStateHandleController controller = SavedStateHandleController.create(
+    mSavedStateRegistry, mLifecycle, key, mDefaultArgs);
+  try {
+    T viewmodel;
+    // 通过构造方法反射实例化ViewModel
+    if (isAndroidViewModel && mApplication != null) {
+      viewmodel = constructor.newInstance(mApplication, controller.getHandle());
+    } else {
+      viewmodel = constructor.newInstance(controller.getHandle());
     }
+    viewmodel.setTagIfAbsent(TAG_SAVED_STATE_HANDLE_CONTROLLER, controller);
+    return viewmodel;
+  } catch (IllegalAccessException e) {
+    throw new RuntimeException("Failed to access " + modelClass, e);
+  } catch (InstantiationException e) {
+    throw new RuntimeException("A " + modelClass + " cannot be instantiated.", e);
+  } catch (InvocationTargetException e) {
+    throw new RuntimeException("An exception happened in constructor of "
+                               + modelClass, e.getCause());
+  }
 }
 ```
 
@@ -293,12 +293,12 @@ public <T extends ViewModel> T create(@NonNull String key, @NonNull Class<T> mod
 
 ```java
 public SavedStateViewModelFactory(@Nullable Application application,
-        @NonNull SavedStateRegistryOwner owner,
-        @Nullable Bundle defaultArgs) {
-		// ...
-    mFactory = application != null
-            ? ViewModelProvider.AndroidViewModelFactory.getInstance(application)
-            : ViewModelProvider.NewInstanceFactory.getInstance();
+                                  @NonNull SavedStateRegistryOwner owner,
+                                  @Nullable Bundle defaultArgs) {
+  // ...
+  mFactory = application != null
+    ? ViewModelProvider.AndroidViewModelFactory.getInstance(application)
+    : ViewModelProvider.NewInstanceFactory.getInstance();
 }
 ```
 
@@ -306,21 +306,21 @@ public SavedStateViewModelFactory(@Nullable Application application,
 
 ```java
 public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-    if (AndroidViewModel.class.isAssignableFrom(modelClass)) {
-        //noinspection TryWithIdenticalCatches
-        try {
-            return modelClass.getConstructor(Application.class).newInstance(mApplication);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException("Cannot create an instance of " + modelClass, e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("Cannot create an instance of " + modelClass, e);
-        } catch (InstantiationException e) {
-            throw new RuntimeException("Cannot create an instance of " + modelClass, e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException("Cannot create an instance of " + modelClass, e);
-        }
+  if (AndroidViewModel.class.isAssignableFrom(modelClass)) {
+    //noinspection TryWithIdenticalCatches
+    try {
+      return modelClass.getConstructor(Application.class).newInstance(mApplication);
+    } catch (NoSuchMethodException e) {
+      throw new RuntimeException("Cannot create an instance of " + modelClass, e);
+    } catch (IllegalAccessException e) {
+      throw new RuntimeException("Cannot create an instance of " + modelClass, e);
+    } catch (InstantiationException e) {
+      throw new RuntimeException("Cannot create an instance of " + modelClass, e);
+    } catch (InvocationTargetException e) {
+      throw new RuntimeException("Cannot create an instance of " + modelClass, e);
     }
-    return super.create(modelClass);
+  }
+  return super.create(modelClass);
 }
 ```
 
@@ -341,32 +341,32 @@ public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
 ```java
 public class ViewModelStore {
 
-    private final HashMap<String, ViewModel> mMap = new HashMap<>();
+  private final HashMap<String, ViewModel> mMap = new HashMap<>();
 
-    final void put(String key, ViewModel viewModel) {
-        ViewModel oldViewModel = mMap.put(key, viewModel);
-        if (oldViewModel != null) {
-            oldViewModel.onCleared();
-        }
+  final void put(String key, ViewModel viewModel) {
+    ViewModel oldViewModel = mMap.put(key, viewModel);
+    if (oldViewModel != null) {
+      oldViewModel.onCleared();
     }
+  }
 
-    final ViewModel get(String key) {
-        return mMap.get(key);
-    }
+  final ViewModel get(String key) {
+    return mMap.get(key);
+  }
 
-    Set<String> keys() {
-        return new HashSet<>(mMap.keySet());
-    }
+  Set<String> keys() {
+    return new HashSet<>(mMap.keySet());
+  }
 
-    /**
+  /**
      *  Clears internal storage and notifies ViewModels that they are no longer used.
      */
-    public final void clear() {
-        for (ViewModel vm : mMap.values()) {
-            vm.clear();
-        }
-        mMap.clear();
+  public final void clear() {
+    for (ViewModel vm : mMap.values()) {
+      vm.clear();
     }
+    mMap.clear();
+  }
 }
 ```
 
@@ -374,46 +374,46 @@ public class ViewModelStore {
 
 ```java
 public ComponentActivity() {
-    Lifecycle lifecycle = getLifecycle();
+  Lifecycle lifecycle = getLifecycle();
 
-    if (Build.VERSION.SDK_INT >= 19) {
-        getLifecycle().addObserver(new LifecycleEventObserver() {
-            @Override
-            public void onStateChanged(@NonNull LifecycleOwner source,
-                    @NonNull Lifecycle.Event event) {
-                if (event == Lifecycle.Event.ON_STOP) {
-                    Window window = getWindow();
-                    final View decor = window != null ? window.peekDecorView() : null;
-                    if (decor != null) {
-                        decor.cancelPendingInputEvents();
-                    }
-                }
-            }
-        });
+  if (Build.VERSION.SDK_INT >= 19) {
+    getLifecycle().addObserver(new LifecycleEventObserver() {
+      @Override
+      public void onStateChanged(@NonNull LifecycleOwner source,
+                                 @NonNull Lifecycle.Event event) {
+        if (event == Lifecycle.Event.ON_STOP) {
+          Window window = getWindow();
+          final View decor = window != null ? window.peekDecorView() : null;
+          if (decor != null) {
+            decor.cancelPendingInputEvents();
+          }
+        }
+      }
+    });
+  }
+  getLifecycle().addObserver(new LifecycleEventObserver() {
+    @Override
+    public void onStateChanged(@NonNull LifecycleOwner source,
+                               @NonNull Lifecycle.Event event) {
+      // Activity的销毁事件
+      if (event == Lifecycle.Event.ON_DESTROY) {
+        // Clear out the available context
+        mContextAwareHelper.clearAvailableContext();
+        // And clear the ViewModelStore
+        if (!isChangingConfigurations()) {
+          getViewModelStore().clear();
+        }
+      }
     }
-    getLifecycle().addObserver(new LifecycleEventObserver() {
-        @Override
-        public void onStateChanged(@NonNull LifecycleOwner source,
-                @NonNull Lifecycle.Event event) {
-            // Activity的销毁事件
-            if (event == Lifecycle.Event.ON_DESTROY) {
-                // Clear out the available context
-                mContextAwareHelper.clearAvailableContext();
-                // And clear the ViewModelStore
-                if (!isChangingConfigurations()) {
-                    getViewModelStore().clear();
-                }
-            }
-        }
-    });
-    getLifecycle().addObserver(new LifecycleEventObserver() {
-        @Override
-        public void onStateChanged(@NonNull LifecycleOwner source,
-                @NonNull Lifecycle.Event event) {
-            ensureViewModelStore();
-            getLifecycle().removeObserver(this);
-        }
-    });
+  });
+  getLifecycle().addObserver(new LifecycleEventObserver() {
+    @Override
+    public void onStateChanged(@NonNull LifecycleOwner source,
+                               @NonNull Lifecycle.Event event) {
+      ensureViewModelStore();
+      getLifecycle().removeObserver(this);
+    }
+  });
 
 
 }
@@ -428,28 +428,28 @@ public ComponentActivity() {
 ```java
 // ComponentActivity
 public final Object onRetainNonConfigurationInstance() {
-    // Maintain backward compatibility.
-    Object custom = onRetainCustomNonConfigurationInstance();
+  // Maintain backward compatibility.
+  Object custom = onRetainCustomNonConfigurationInstance();
 
-    ViewModelStore viewModelStore = mViewModelStore;
-    if (viewModelStore == null) {
-        // No one called getViewModelStore(), so see if there was an existing
-        // ViewModelStore from our last NonConfigurationInstance
-        NonConfigurationInstances nc =
-                (NonConfigurationInstances) getLastNonConfigurationInstance();
-        if (nc != null) {
-            viewModelStore = nc.viewModelStore;
-        }
+  ViewModelStore viewModelStore = mViewModelStore;
+  if (viewModelStore == null) {
+    // No one called getViewModelStore(), so see if there was an existing
+    // ViewModelStore from our last NonConfigurationInstance
+    NonConfigurationInstances nc =
+      (NonConfigurationInstances) getLastNonConfigurationInstance();
+    if (nc != null) {
+      viewModelStore = nc.viewModelStore;
     }
+  }
 
-    if (viewModelStore == null && custom == null) {
-        return null;
-    }
+  if (viewModelStore == null && custom == null) {
+    return null;
+  }
 
-    NonConfigurationInstances nci = new NonConfigurationInstances();
-    nci.custom = custom;
-    nci.viewModelStore = viewModelStore;
-    return nci;
+  NonConfigurationInstances nci = new NonConfigurationInstances();
+  nci.custom = custom;
+  nci.viewModelStore = viewModelStore;
+  return nci;
 }
 ```
 
@@ -458,8 +458,8 @@ ViewModelStore的恢复则是在getLastNonConfigurationInstance中，代码如�
 ```java
 // Activity
 public Object getLastNonConfigurationInstance() {
-    return mLastNonConfigurationInstances != null
-            ? mLastNonConfigurationInstances.activity : null;
+  return mLastNonConfigurationInstances != null
+    ? mLastNonConfigurationInstances.activity : null;
 }
 ```
 

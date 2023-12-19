@@ -35,19 +35,19 @@ private final ArrayList<IdleHandler> mIdleHandlers = new ArrayList<IdleHandler>(
 
 // 添加IdleHandler
 public void addIdleHandler(@NonNull IdleHandler handler) {
-    if (handler == null) {
-        throw new NullPointerException("Can't add a null IdleHandler");
-    }
-    synchronized (this) {
-        mIdleHandlers.add(handler);
-    }
+  if (handler == null) {
+    throw new NullPointerException("Can't add a null IdleHandler");
+  }
+  synchronized (this) {
+    mIdleHandlers.add(handler);
+  }
 }
 
 // 移除IdleHandler
 public void removeIdleHandler(@NonNull IdleHandler handler) {
-    synchronized (this) {
-        mIdleHandlers.remove(handler);
-    }
+  synchronized (this) {
+    mIdleHandlers.remove(handler);
+  }
 }
 ```
 
@@ -57,71 +57,71 @@ mIdleHandlers是在MessageQueue中被执行的，相关代码如下;
 
 ```java
 Message next() {
-		// 初次执行pendingIdleHandlerCount 的值是-1
-    int pendingIdleHandlerCount = -1; 
-    int nextPollTimeoutMillis = 0;
-    for (;;) {
-        if (nextPollTimeoutMillis != 0) {
-            Binder.flushPendingCommands();
-        }
-				// 阻塞方法，调用native层的epoll监听文件描述符的写入事件来实现
-        // 如果 nextPollTimeoutMillis = -1，则会一直阻塞，不会超时
-        // 如果 nextPollTimeoutMillis = 0，不会阻塞,立即返回
-        // 如果 nextPollTimeoutMillis >0,表示最长的阻塞时间为nextPollTimeoutMillis，如果期间被唤醒则立即返回
-        nativePollOnce(ptr, nextPollTimeoutMillis);
-
-        synchronized (this) {
-           	// ... 省略消息处理相关逻辑
-          
-						// 1.pendingIdleHandlerCount默认值为-1，满足第一个条件
-            // 2.没有消息，或者当前没有要执行的消息
-            // 同时满足以上两个条件才会进入if语句
-            if (pendingIdleHandlerCount < 0
-                    && (mMessages == null || now < mMessages.when)) {
-                // 获取IdleHandler的个数并赋值给pendingIdleHandlerCount
-                pendingIdleHandlerCount = mIdleHandlers.size();
-            }
-            
-            if (pendingIdleHandlerCount <= 0) {
-                // 没有要执行的IdleHandler
-                mBlocked = true;
-                continue;
-            }
-						
-            if (mPendingIdleHandlers == null) {
-                // 初始化一个最小值为4的IdleHandler数组
-                mPendingIdleHandlers = new IdleHandler[Math.max(pendingIdleHandlerCount, 4)];
-            }
-            // 将mIdleHandlers添加到数组中
-            mPendingIdleHandlers = mIdleHandlers.toArray(mPendingIdleHandlers);
-        }
-
-				// 遍历数组执行IdleHandler
-        for (int i = 0; i < pendingIdleHandlerCount; i++) {
-            // 取出IdleHandler
-            final IdleHandler idler = mPendingIdleHandlers[i];
-            mPendingIdleHandlers[i] = null; // release the reference to the handler
-
-            boolean keep = false;
-            try {
-                // 执行IdleHandler的queueIdle，返回值表示是否要保留IdleHandler
-                keep = idler.queueIdle();
-            } catch (Throwable t) {
-                Log.wtf(TAG, "IdleHandler threw exception", t);
-            }
-
-            if (!keep) {
-                synchronized (this) {
-                    // 不保留则从集合中移除IdleHandler
-                    mIdleHandlers.remove(idler);
-                }
-            }
-        }
-
-        pendingIdleHandlerCount = 0;
-
-        nextPollTimeoutMillis = 0;
+  // 初次执行pendingIdleHandlerCount 的值是-1
+  int pendingIdleHandlerCount = -1; 
+  int nextPollTimeoutMillis = 0;
+  for (;;) {
+    if (nextPollTimeoutMillis != 0) {
+      Binder.flushPendingCommands();
     }
+    // 阻塞方法，调用native层的epoll监听文件描述符的写入事件来实现
+    // 如果 nextPollTimeoutMillis = -1，则会一直阻塞，不会超时
+    // 如果 nextPollTimeoutMillis = 0，不会阻塞,立即返回
+    // 如果 nextPollTimeoutMillis >0,表示最长的阻塞时间为nextPollTimeoutMillis，如果期间被唤醒则立即返回
+    nativePollOnce(ptr, nextPollTimeoutMillis);
+
+    synchronized (this) {
+      // ... 省略消息处理相关逻辑
+
+      // 1.pendingIdleHandlerCount默认值为-1，满足第一个条件
+      // 2.没有消息，或者当前没有要执行的消息
+      // 同时满足以上两个条件才会进入if语句
+      if (pendingIdleHandlerCount < 0
+          && (mMessages == null || now < mMessages.when)) {
+        // 获取IdleHandler的个数并赋值给pendingIdleHandlerCount
+        pendingIdleHandlerCount = mIdleHandlers.size();
+      }
+
+      if (pendingIdleHandlerCount <= 0) {
+        // 没有要执行的IdleHandler
+        mBlocked = true;
+        continue;
+      }
+
+      if (mPendingIdleHandlers == null) {
+        // 初始化一个最小值为4的IdleHandler数组
+        mPendingIdleHandlers = new IdleHandler[Math.max(pendingIdleHandlerCount, 4)];
+      }
+      // 将mIdleHandlers添加到数组中
+      mPendingIdleHandlers = mIdleHandlers.toArray(mPendingIdleHandlers);
+    }
+
+    // 遍历数组执行IdleHandler
+    for (int i = 0; i < pendingIdleHandlerCount; i++) {
+      // 取出IdleHandler
+      final IdleHandler idler = mPendingIdleHandlers[i];
+      mPendingIdleHandlers[i] = null; // release the reference to the handler
+
+      boolean keep = false;
+      try {
+        // 执行IdleHandler的queueIdle，返回值表示是否要保留IdleHandler
+        keep = idler.queueIdle();
+      } catch (Throwable t) {
+        Log.wtf(TAG, "IdleHandler threw exception", t);
+      }
+
+      if (!keep) {
+        synchronized (this) {
+          // 不保留则从集合中移除IdleHandler
+          mIdleHandlers.remove(idler);
+        }
+      }
+    }
+
+    pendingIdleHandlerCount = 0;
+
+    nextPollTimeoutMillis = 0;
+  }
 }
 ```
 

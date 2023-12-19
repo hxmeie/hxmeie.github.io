@@ -131,23 +131,23 @@ public enum Event {
 - 在SDK29以上的版本 使用的是 **LifecycleCallbacks.registerIn(activity)**。
 
 ```java
-    /* ReportFragment */
-    public static void injectIfNeededIn(Activity activity) {
-        if (Build.VERSION.SDK_INT >= 29) {
-            // On API 29+, we can register for the correct Lifecycle callbacks directly
-            LifecycleCallbacks.registerIn(activity);
-        }
-        // Prior to API 29 and to maintain compatibility with older versions of
-        // ProcessLifecycleOwner (which may not be updated when lifecycle-runtime is updated and
-        // need to support activities that don't extend from FragmentActivity from support lib),
-        // use a framework fragment to get the correct timing of Lifecycle events
-        android.app.FragmentManager manager = activity.getFragmentManager();
-        if (manager.findFragmentByTag(REPORT_FRAGMENT_TAG) == null) {
-            manager.beginTransaction().add(new ReportFragment(), REPORT_FRAGMENT_TAG).commit();
-            // Hopefully, we are the first to make a transaction.
-            manager.executePendingTransactions();
-        }
-    }
+/* ReportFragment */
+public static void injectIfNeededIn(Activity activity) {
+  if (Build.VERSION.SDK_INT >= 29) {
+    // On API 29+, we can register for the correct Lifecycle callbacks directly
+    LifecycleCallbacks.registerIn(activity);
+  }
+  // Prior to API 29 and to maintain compatibility with older versions of
+  // ProcessLifecycleOwner (which may not be updated when lifecycle-runtime is updated and
+  // need to support activities that don't extend from FragmentActivity from support lib),
+  // use a framework fragment to get the correct timing of Lifecycle events
+  android.app.FragmentManager manager = activity.getFragmentManager();
+  if (manager.findFragmentByTag(REPORT_FRAGMENT_TAG) == null) {
+    manager.beginTransaction().add(new ReportFragment(), REPORT_FRAGMENT_TAG).commit();
+    // Hopefully, we are the first to make a transaction.
+    manager.executePendingTransactions();
+  }
+}
 ```
 
 ### 3.6 LifecycleCallbacks.registerIn(activity)
@@ -156,20 +156,20 @@ public enum Event {
 - 大名鼎鼎的LeakCanary在监听Activity生命周期，也是使用 Application.ActivityLifecycleCallbacks。
 
 ```java
-    @RequiresApi(29)
-    static class LifecycleCallbacks implements Application.ActivityLifecycleCallbacks {
-    
-        static void registerIn(Activity activity) {
-            activity.registerActivityLifecycleCallbacks(new LifecycleCallbacks());
-        }
-		...
-        @Override
-        public void onActivityPostCreated(@NonNull Activity activity,
-                @Nullable Bundle savedInstanceState) {
-            dispatch(activity, Lifecycle.Event.ON_CREATE);
-        }
-      ...
-    }
+@RequiresApi(29)
+static class LifecycleCallbacks implements Application.ActivityLifecycleCallbacks {
+
+  static void registerIn(Activity activity) {
+    activity.registerActivityLifecycleCallbacks(new LifecycleCallbacks());
+  }
+  ...
+    @Override
+    public void onActivityPostCreated(@NonNull Activity activity,
+                                      @Nullable Bundle savedInstanceState) {
+    dispatch(activity, Lifecycle.Event.ON_CREATE);
+  }
+  ...
+}
 ```
 
 ### 3.7 ReportFragment.dispatch 版本兼容
@@ -179,35 +179,35 @@ public enum Event {
 - 反正无论是使用 LifecycleCallbacks.registerIn(activity)，还是 Fragment 的生命周期回调，最后都会dispatch。
 
 ```java
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        dispatchCreate(mProcessListener);
-        dispatch(Lifecycle.Event.ON_CREATE);
-    }
+@Override
+public void onActivityCreated(Bundle savedInstanceState) {
+  super.onActivityCreated(savedInstanceState);
+  dispatchCreate(mProcessListener);
+  dispatch(Lifecycle.Event.ON_CREATE);
+}
 
-    private void dispatch(@NonNull Lifecycle.Event event) {
-        if (Build.VERSION.SDK_INT < 29) {
-            // Only dispatch events from ReportFragment on API levels prior
-            // to API 29. On API 29+, this is handled by the ActivityLifecycleCallbacks
-            // added in ReportFragment.injectIfNeededIn
-            dispatch(getActivity(), event);
-        }
-    }
-    
-    static void dispatch(@NonNull Activity activity, @NonNull Lifecycle.Event event) {
-        if (activity instanceof LifecycleRegistryOwner) {
-            ((LifecycleRegistryOwner) activity).getLifecycle().handleLifecycleEvent(event);
-            return;
-        }
+private void dispatch(@NonNull Lifecycle.Event event) {
+  if (Build.VERSION.SDK_INT < 29) {
+    // Only dispatch events from ReportFragment on API levels prior
+    // to API 29. On API 29+, this is handled by the ActivityLifecycleCallbacks
+    // added in ReportFragment.injectIfNeededIn
+    dispatch(getActivity(), event);
+  }
+}
 
-        if (activity instanceof LifecycleOwner) {
-            Lifecycle lifecycle = ((LifecycleOwner) activity).getLifecycle();
-            if (lifecycle instanceof LifecycleRegistry) {
-                ((LifecycleRegistry) lifecycle).handleLifecycleEvent(event);
-            }
-        }
+static void dispatch(@NonNull Activity activity, @NonNull Lifecycle.Event event) {
+  if (activity instanceof LifecycleRegistryOwner) {
+    ((LifecycleRegistryOwner) activity).getLifecycle().handleLifecycleEvent(event);
+    return;
+  }
+
+  if (activity instanceof LifecycleOwner) {
+    Lifecycle lifecycle = ((LifecycleOwner) activity).getLifecycle();
+    if (lifecycle instanceof LifecycleRegistry) {
+      ((LifecycleRegistry) lifecycle).handleLifecycleEvent(event);
     }
+  }
+}
 ```
 
 ### 3.8 Lifecycle.State
@@ -218,22 +218,22 @@ public enum Event {
 ![Lifecycle.State](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202305221356364.awebp)
 
 ```java
-    /* Lifecycle.State */
-    public enum State {
-        DESTROYED,
-      
-        INITIALIZED,
-      
-        CREATED,
-     
-        STARTED,
+/* Lifecycle.State */
+public enum State {
+  DESTROYED,
 
-        RESUMED;
-        
-        public boolean isAtLeast(@NonNull State state) {
-            return compareTo(state) >= 0;
-        }
-    }
+  INITIALIZED,
+
+  CREATED,
+
+  STARTED,
+
+  RESUMED;
+
+  public boolean isAtLeast(@NonNull State state) {
+    return compareTo(state) >= 0;
+  }
+}
 ```
 
 ### 3.9 handleLifecycleEvent
@@ -242,51 +242,51 @@ public enum Event {
 - 就是把 Lifecycle.Event处理一下，转化成 Lifecycle.State。
 
 ```java
-    /* Lifecycle.Event */
-        @NonNull
-        public State getTargetState() {
-            switch (this) {
-                case ON_CREATE:
-                case ON_STOP:
-                    return State.CREATED;
-                case ON_START:
-                case ON_PAUSE:
-                    return State.STARTED;
-                case ON_RESUME:
-                    return State.RESUMED;
-                case ON_DESTROY:
-                    return State.DESTROYED;
-                case ON_ANY:
-                    break;
-            }
-            throw new IllegalArgumentException(this + " has no target state");
-        }
+/* Lifecycle.Event */
+@NonNull
+public State getTargetState() {
+  switch (this) {
+    case ON_CREATE:
+    case ON_STOP:
+      return State.CREATED;
+    case ON_START:
+    case ON_PAUSE:
+      return State.STARTED;
+    case ON_RESUME:
+      return State.RESUMED;
+    case ON_DESTROY:
+      return State.DESTROYED;
+    case ON_ANY:
+      break;
+  }
+  throw new IllegalArgumentException(this + " has no target state");
+}
 ```
 
 - 将 Lifecycle.State 继续往下传，先用 mState 保存，再 sync 方法处理。
 
 ```java
-    /* LifecycleRegistry  */
-    public void handleLifecycleEvent(@NonNull Lifecycle.Event event) {
-        enforceMainThreadIfNeeded("handleLifecycleEvent");
-        moveToState(event.getTargetState());
-    }
+/* LifecycleRegistry  */
+public void handleLifecycleEvent(@NonNull Lifecycle.Event event) {
+  enforceMainThreadIfNeeded("handleLifecycleEvent");
+  moveToState(event.getTargetState());
+}
 
-    private void moveToState(State next) {
-        if (mState == next) {
-            return;
-        }
-        //保存state状态
-        mState = next;
-        if (mHandlingEvent || mAddingObserverCounter != 0) {
-            mNewEventOccurred = true;
-            // we will figure out what to do on upper level.
-            return;
-        }
-        mHandlingEvent = true;
-        sync();
-        mHandlingEvent = false;
-    }
+private void moveToState(State next) {
+  if (mState == next) {
+    return;
+  }
+  //保存state状态
+  mState = next;
+  if (mHandlingEvent || mAddingObserverCounter != 0) {
+    mNewEventOccurred = true;
+    // we will figure out what to do on upper level.
+    return;
+  }
+  mHandlingEvent = true;
+  sync();
+  mHandlingEvent = false;
+}
 ```
 
 ### 3.10 sync
@@ -294,32 +294,31 @@ public enum Event {
 - 这里利用上一个方法保存的mState，用于比较，判断是正向执行还是反向执行生命周期。
 
 ```java
-    /* LifecycleRegistry  */
-    private void sync() {
-    	//这是弱引用包装过的LifecycleOwner 
-        LifecycleOwner lifecycleOwner = mLifecycleOwner.get();
-        if (lifecycleOwner == null) {
-            throw new IllegalStateException("LifecycleOwner of this LifecycleRegistry is already"
-                    + "garbage collected. It is too late to change lifecycle state.");
-        }
-        while (!isSynced()) {
-            mNewEventOccurred = false;
-            // no need to check eldest for nullability, because isSynced does it for us.
-            //上一个方法保存的mState，跟组件之前的的mState对比
-            if (mState.compareTo(mObserverMap.eldest().getValue().mState) < 0) {
-            	//返向执行流程
-                backwardPass(lifecycleOwner);
-            }
-           
-            Map.Entry<LifecycleObserver, ObserverWithState> newest = mObserverMap.newest();
-            if (!mNewEventOccurred && newest != null
-                    && mState.compareTo(newest.getValue().mState) > 0) {
-                //正向执行流程
-                forwardPass(lifecycleOwner);
-            }
-        }
-        mNewEventOccurred = false;
+/* LifecycleRegistry  */
+private void sync() {
+  //这是弱引用包装过的LifecycleOwner 
+  LifecycleOwner lifecycleOwner = mLifecycleOwner.get();
+  if (lifecycleOwner == null) {
+    throw new IllegalStateException("LifecycleOwner of this LifecycleRegistry is already" + "garbage collected. It is too late to change lifecycle state.");
+  }
+  while (!isSynced()) {
+    mNewEventOccurred = false;
+    // no need to check eldest for nullability, because isSynced does it for us.
+    //上一个方法保存的mState，跟组件之前的的mState对比
+    if (mState.compareTo(mObserverMap.eldest().getValue().mState) < 0) {
+      //返向执行流程
+      backwardPass(lifecycleOwner);
     }
+
+    Map.Entry<LifecycleObserver, ObserverWithState> newest = mObserverMap.newest();
+    if (!mNewEventOccurred && newest != null
+        && mState.compareTo(newest.getValue().mState) > 0) {
+      //正向执行流程
+      forwardPass(lifecycleOwner);
+    }
+  }
+  mNewEventOccurred = false;
+}
 ```
 
 ### 3.11 forwardPass
@@ -328,47 +327,47 @@ public enum Event {
 - 这里又把 Lifecycle.State 转回 Lifecycle.Event，然后给观察者分发出去。
 
 ```java
-    /* Lifecycle.Event */
-        @Nullable
-        public static Event upFrom(@NonNull State state) {
-            switch (state) {
-                case INITIALIZED:
-                    return ON_CREATE;
-                case CREATED:
-                    return ON_START;
-                case STARTED:
-                    return ON_RESUME;
-                default:
-                    return null;
-            }
-        }
+/* Lifecycle.Event */
+@Nullable
+public static Event upFrom(@NonNull State state) {
+  switch (state) {
+    case INITIALIZED:
+      return ON_CREATE;
+    case CREATED:
+      return ON_START;
+    case STARTED:
+      return ON_RESUME;
+    default:
+      return null;
+  }
+}
 ```
 
 - 转换 Event.upFrom ，发送 observer.dispatchEvent。
 
 ```java
-    /* LifecycleRegistry  */
-    private void forwardPass(LifecycleOwner lifecycleOwner) {
-        Iterator<Map.Entry<LifecycleObserver, ObserverWithState>> ascendingIterator =
-                mObserverMap.iteratorWithAdditions();
-        while (ascendingIterator.hasNext() && !mNewEventOccurred) {
-            Map.Entry<LifecycleObserver, ObserverWithState> entry = ascendingIterator.next();
-            ObserverWithState observer = entry.getValue();
-            while ((observer.mState.compareTo(mState) < 0 && !mNewEventOccurred
-                    && mObserverMap.contains(entry.getKey()))) {
-                pushParentState(observer.mState);
+/* LifecycleRegistry  */
+private void forwardPass(LifecycleOwner lifecycleOwner) {
+  Iterator<Map.Entry<LifecycleObserver, ObserverWithState>> ascendingIterator =
+    mObserverMap.iteratorWithAdditions();
+  while (ascendingIterator.hasNext() && !mNewEventOccurred) {
+    Map.Entry<LifecycleObserver, ObserverWithState> entry = ascendingIterator.next();
+    ObserverWithState observer = entry.getValue();
+    while ((observer.mState.compareTo(mState) < 0 && !mNewEventOccurred
+            && mObserverMap.contains(entry.getKey()))) {
+      pushParentState(observer.mState);
 
-				//转化
-                final Event event = Event.upFrom(observer.mState);
-                if (event == null) {
-                    throw new IllegalStateException("no event up from " + observer.mState);
-                }
-				//发送
-                observer.dispatchEvent(lifecycleOwner, event);
-                popParentState();
-            }
-        }
+      //转化
+      final Event event = Event.upFrom(observer.mState);
+      if (event == null) {
+        throw new IllegalStateException("no event up from " + observer.mState);
+      }
+      //发送
+      observer.dispatchEvent(lifecycleOwner, event);
+      popParentState();
     }
+  }
+}
 ```
 
 ### 3.12 发送生命周期状态
@@ -376,23 +375,23 @@ public enum Event {
 - ObserverWithState 发送出 Lifecycle.Event ，至此就结束了，有注册订阅关系的地方就能收到。
 
 ```java
-    static class ObserverWithState {
-        State mState;
-        LifecycleEventObserver mLifecycleObserver;
+static class ObserverWithState {
+  State mState;
+  LifecycleEventObserver mLifecycleObserver;
 
-        ObserverWithState(LifecycleObserver observer, State initialState) {
-            mLifecycleObserver = Lifecycling.lifecycleEventObserver(observer);
-            mState = initialState;
-        }
+  ObserverWithState(LifecycleObserver observer, State initialState) {
+    mLifecycleObserver = Lifecycling.lifecycleEventObserver(observer);
+    mState = initialState;
+  }
 
-		/* 分发生命周期状态 */
-        void dispatchEvent(LifecycleOwner owner, Event event) {
-            State newState = event.getTargetState();
-            mState = min(mState, newState);
-            mLifecycleObserver.onStateChanged(owner, event);
-            mState = newState;
-        }
-    }
+  /* 分发生命周期状态 */
+  void dispatchEvent(LifecycleOwner owner, Event event) {
+    State newState = event.getTargetState();
+    mState = min(mState, newState);
+    mLifecycleObserver.onStateChanged(owner, event);
+    mState = newState;
+  }
+}
 ```
 
 ### 3.13 简易流程图
