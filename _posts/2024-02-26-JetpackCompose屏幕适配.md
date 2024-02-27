@@ -8,11 +8,6 @@ tags: [Compose]
 keywords: [屏幕适配,Compose,Android]
 ---
 
-> 转载自：<https://juejin.cn/post/7113953940282015758>
-{: .prompt-info}
-
-
-
 “受益”于目前 Android 手机各类屏幕尺寸长短不定、宽高比例大小不一的现状，**屏幕适配** 依然是 Android 应用开发时绕不开的问题
 
 我们在日常开发中使用得最多的尺寸单位应该是 dp 了，Google 也推荐开发者尽量使用 dp 作为单位值，因为系统会根据屏幕的实际情况来完成 dp 和 px 之间的对应换算，使得同个 dp 值的显示效果在不同手机屏幕上不会相差太大。但直接使用 dp 值后的最终显示效果只能说不会和设计稿相差太远，想要做到完美适配还远远不够
@@ -236,3 +231,7 @@ fun MyApplicationTheme(
 此外，smallestWidth 方案也一样适用于 Jetpack Compose，`androidx.compose.ui:ui:xxx` 库中就提供了 `dimensionResource` 方法用于获取 dimension 值，此方法会将获取到的值转换为 Dp 类型。因此如果读者项目中原本已经使用了 smallestWidth 方案的话，在 Jetpack Compose 中也依然可以继续使用
 
 如果读者对于今日头条方案和 smallestWidth 方案还不是很了解的话，参照 [一文读懂 Android 主流屏幕适配方案](https://juejin.cn/post/6999445137491230728) 这篇文章就可以了 ~
+
+
+> 转载自：<https://juejin.cn/post/7113953940282015758>
+{: .prompt-info}

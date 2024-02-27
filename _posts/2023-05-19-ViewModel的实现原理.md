@@ -11,9 +11,6 @@ image:
   alt: ViewModel的实现原理
 ---
 
->转载自：<https://github.com/zhpanvip/AndroidNote>
-{: .prompt-info}
-
 ## 一、ViewModel的使用
 
 在页面（Activity/Fragment）很简单的情况下，通常我们会将UI交互，数据获取与处理等相关业务逻辑，全部写在页面中，但是在页面复杂的情况下，这样做是不合适的，它不符合“**单一责任**”原则。页面只应该负责接收用户的交互，以及将数据展示到屏幕上，相关数据应该单独存放和处理。
@@ -480,3 +477,6 @@ https://juejin.cn/post/6987566061499449357
 https://juejin.cn/post/6844903801044877325
 
 https://zhuanlan.zhihu.com/p/76361500
+
+>转载自：<https://github.com/zhpanvip/AndroidNote>
+{: .prompt-info}

@@ -7,9 +7,6 @@ tags: [转载,复习]
 keywords: [面试,Android,choreographer]
 ---
 
->转载自：<https://github.com/zhpanvip/AndroidNote>
-{: .prompt-info}
-
 ## [屏幕刷新机制](/posts/屏幕刷新机制)
 
 ## 一、Choreographer概述
@@ -349,3 +346,6 @@ void scheduleTraversals() {
 
 > [Choreographer源码分析](https://androidperformance.com/2019/10/22/Android-Choreographer/#Choreographer-%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96)
 {: .prompt-tip}
+
+>转载自：<https://github.com/zhpanvip/AndroidNote>
+{: .prompt-info}

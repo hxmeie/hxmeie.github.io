@@ -11,9 +11,6 @@ image:
   alt: Lifecyce原理解析
 ---
 
->转载自：<https://juejin.cn/post/6970624724493664287>
-{: .prompt-info}
-
 ## 1.Lifecycle了解
 
 - 到官方文档下看 **[Google Lifecycle](https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.android.google.cn%2Fjetpack%2Fandroidx%2Freleases%2Flifecycle)**，Lifecycle的作用是：生命周期感知型组件可执行操作来响应另一个组件（如 Activity 和 Fragment）的生命周期状态的变化。这些组件有助于您写出更有条理且往往更精简的代码，这样的代码更易于维护。
@@ -397,3 +394,6 @@ static class ObserverWithState {
 ### 3.13 简易流程图
 
 ![简易流程图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202305221356151.awebp)
+
+>转载自：<https://juejin.cn/post/6970624724493664287>
+{: .prompt-info}

@@ -36,7 +36,7 @@ image:
     1. [关于HTTPS的那些事](https://juejin.cn/post/6844903905894088712)
     2. [一个故事讲完https](https://mp.weixin.qq.com/s/StqqafHePlBkWAPQZg3NrA)
     3. [HTTPS实现原理](/posts/HTTPS%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/)
-20. [10大经典排序算法](https://blog.csdn.net/qq_43794633/article/details/121612149)
+20. [10大经典排序算法](/posts/%E5%8D%81%E5%A4%A7%E7%BB%8F%E5%85%B8%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/)
 
 
 

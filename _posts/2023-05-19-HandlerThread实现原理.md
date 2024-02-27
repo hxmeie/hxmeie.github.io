@@ -6,8 +6,6 @@ last_modified_at:
 tags: [转载,复习]
 keywords: [面试,Android,HandlerThread]
 ---
->转载自：<https://github.com/zhpanvip/AndroidNote>
-{: .prompt-info}
 
 HandlerThread 继承于 Thread，所以它本质就是个 Thread。与普通 Thread 的区别在于，它不仅建立了一个线程，并且创建了消息队列，有自己的 Looper，可以让我们在自己的线程中分发和处理消息，并对外提供自己的 Looper 的 get 方法。
 
@@ -160,3 +158,7 @@ public class HandlerThread extends Thread {
 - HandlerThread 是一个自带 Looper 的线程，因此只能作为子线程使用 
 - HandlerThread 必须配合 Handler 使用，HandlerThread 线程中具体做什么事，需要在 Handler 的 callback 中进行，因为它自己的 run 方法被写死了
 - 子线程的 Handler 与 HandlerThread 关系建立是通过构造子线程的Handler 传入 HandlerThread 的 Looper 。所以在此之前，必须先调用 mHandlerThread.start 让 run 方法跑起来 Looper 才能创建。
+
+
+>转载自：<https://github.com/zhpanvip/AndroidNote>
+{: .prompt-info}
