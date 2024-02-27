@@ -27,7 +27,7 @@ image:
 11. [深入理解Java的反射机制](https://juejin.cn/post/6917984253360177159)
 12. [探索Java虚拟机的类加载机制](https://juejin.cn/post/6910194176147587086)
 13. [Java垃圾回收机制最全解析](https://juejin.cn/post/6874810532730404878)
-14. [volatile关键字在单例模式中的作用](/posts/volatile%e5%85%b3%e9%94%ae%e5%ad%97%e5%9c%a8%e5%8d%95%e4%be%8b%e6%a8%a1%e5%bc%8f(%e5%8f%8c%e9%87%8d%e6%a0%a1%e9%aa%8c%e9%94%81)%e4%b8%ad%e7%9a%84%e4%bd%9c%e7%94%a8)
+14. [volatile关键字在单例模式中的作用](/posts/volatile关键字在单例模式(双重校验锁)中的作用/)
 15. [HashMap详解1.7](https://blog.csdn.net/carson_ho/article/details/79373026)
 16. [HashMap详解1.8](https://blog.csdn.net/carson_ho/article/details/79373134)
 17. [死锁产生的四个必要条件](https://blog.csdn.net/jyy305/article/details/70077042)
@@ -35,7 +35,7 @@ image:
 19. **Https相关文章**
     1. [关于HTTPS的那些事](https://juejin.cn/post/6844903905894088712)
     2. [一个故事讲完https](https://mp.weixin.qq.com/s/StqqafHePlBkWAPQZg3NrA)
-    3. [HTTPS实现原理](/posts/HTTPS%e5%ae%9e%e7%8e%b0%e5%8e%9f%e7%90%86)
+    3. [HTTPS实现原理](/posts/HTTPS实现原理/)
 20. [10大经典排序算法](https://blog.csdn.net/qq_43794633/article/details/121612149)
 
 
