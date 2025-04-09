@@ -3,8 +3,8 @@ categories: [Jetpack Compose]
 title: JetpackCompose屏幕适配
 date: 2024-02-26 09:39:00 +0800
 pin: false
-last_modified_at: 2024-02-26 09:39:00 +0800
-tags: [Compose]
+last_modified_at: 2025-04-09 09:55:00 +0800
+tags: [compose]
 keywords: [屏幕适配,Compose,Android]
 ---
 
@@ -76,19 +76,220 @@ public static float applyDimension(int unit, float value, DisplayMetrics metrics
 
 以 Modifier 的扩展函数 `Modifier.size(width: Dp, height: Dp)` 为例，其宽高大小均是 Dp 类型，在生成尺寸约束 Constraints 时，也是将 dp 转换为 px 后使用，对应 `Dp.roundToPx()` 方法
 
-![img](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202402260944254.awebp)
+```kotlin
+private class SizeNode(
+  var minWidth: Dp = Dp.Unspecified,
+  var minHeight: Dp = Dp.Unspecified,
+  var maxWidth: Dp = Dp.Unspecified,
+  var maxHeight: Dp = Dp.Unspecified,
+  var enforceIncoming: Boolean
+) : LayoutModifierNode, Modifier.Node() {
+  private val Density.targetConstraints: Constraints
+  get() {
+    val maxWidth = if (maxWidth != Dp.Unspecified) {
+      maxWidth.roundToPx().coerceAtLeast(0)
+    } else {
+      Constraints.Infinity
+    }
+    val maxHeight = if (maxHeight != Dp.Unspecified) {
+      maxHeight.roundToPx().coerceAtLeast(0)
+    } else {
+      Constraints.Infinity
+    }
+    val minWidth = if (minWidth != Dp.Unspecified) {
+      minWidth.roundToPx().coerceAtMost(maxWidth).coerceAtLeast(0).let {
+        if (it != Constraints.Infinity) it else 0
+      }
+    } else {
+      0
+    }
+    val minHeight = if (minHeight != Dp.Unspecified) {
+      minHeight.roundToPx().coerceAtMost(maxHeight).coerceAtLeast(0).let {
+        if (it != Constraints.Infinity) it else 0
+      }
+    } else {
+      0
+    }
+    return Constraints(
+      minWidth = minWidth,
+      minHeight = minHeight,
+      maxWidth = maxWidth,
+      maxHeight = maxHeight
+    )
+  }
+}
+```
 
 继续跟踪 `Dp.roundToPx()` 方法，可以看到 dp 和 px 之间的转换方式和原生 View 体系一样，也是按照 `px = dp * density` 的公式来进行转换的，density 值由 Density 接口来定义和提供
 
-![img](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202402260945735.awebp)
+```kotlin
+@Immutable
+@JvmDefaultWithCompatibility
+interface Density : FontScaling {
 
-此外，Density 接口还定义了 `fontScale` 变量，这就很容易让人联想到 sp 单位了。实际上，Density 接口的确提供了多个方法，用来实现 dp、px、sp 等单位之间的互相转换
+    /**
+     * The logical density of the display. This is a scaling factor for the [Dp] 			*	unit.
+     */
+    @Stable
+    val density: Float
 
-![img](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202402260945816.awebp)
+    /**
+     * Convert [Dp] to pixels. Pixels are used to paint to Canvas.
+     */
+    @Stable
+    fun Dp.toPx(): Float = value * density
+
+    /**
+     * Convert [Dp] to [Int] by rounding
+     */
+    @Stable
+    fun Dp.roundToPx(): Int {
+        val px = toPx()
+        return if (px.isInfinite()) Constraints.Infinity else px.fastRoundToInt()
+    }
+
+    /**
+     * Convert Sp to pixels. Pixels are used to paint to Canvas.
+     * @throws IllegalStateException if TextUnit other than SP unit is specified.
+     */
+    @Stable
+    fun TextUnit.toPx(): Float {
+        check(type == TextUnitType.Sp) { "Only Sp can convert to Px" }
+        return toDp().toPx()
+    }
+
+    /**
+     * Convert Sp to [Int] by rounding
+     */
+    @Stable
+    fun TextUnit.roundToPx(): Int = toPx().fastRoundToInt()
+
+    /**
+     * Convert an [Int] pixel value to [Dp].
+     */
+    @Stable
+    fun Int.toDp(): Dp = (this / density).dp
+
+    /**
+     * Convert an [Int] pixel value to Sp.
+     */
+    @Stable
+    fun Int.toSp(): TextUnit = toDp().toSp()
+
+    /** Convert a [Float] pixel value to a Dp */
+    @Stable
+    fun Float.toDp(): Dp = (this / density).dp
+
+    /** Convert a [Float] pixel value to a Sp */
+    @Stable
+    fun Float.toSp(): TextUnit = toDp().toSp()
+
+    /**
+     * Convert a [DpRect] to a [Rect].
+     */
+    @Stable
+    fun DpRect.toRect(): Rect {
+        return Rect(
+            left.toPx(),
+            top.toPx(),
+            right.toPx(),
+            bottom.toPx()
+        )
+    }
+
+    /**
+     * Convert a [DpSize] to a [Size].
+     */
+    @Stable
+    fun DpSize.toSize(): Size = if (isSpecified) {
+        Size(width.toPx(), height.toPx())
+    } else {
+        Size.Unspecified
+    }
+
+    /**
+     * Convert a [Size] to a [DpSize].
+     */
+    @Stable
+    fun Size.toDpSize(): DpSize = if (isSpecified) {
+        DpSize(width.toDp(), height.toDp())
+    } else {
+        DpSize.Unspecified
+    }
+}
+```
+
+此外，Density 接口还实现了FontScaling接口
+
+```kotlin
+/**
+ * Converts [TextUnit] to [Dp] and vice-versa.
+ *
+ * If you are implementing this interface yourself on Android, please check the    * docs for important
+ * optimization tips about caching.
+ */
+@Immutable
+@JvmDefaultWithCompatibility
+expect interface FontScaling {
+    /**
+     * Current user preference for the scaling factor for fonts.
+     */
+    @Stable
+    val fontScale: Float
+
+    /**
+     * Convert [Dp] to Sp. Sp is used for font size, etc.
+     */
+    @Stable
+    open fun Dp.toSp(): TextUnit
+
+    /**
+     * Convert Sp to [Dp].
+     * @throws IllegalStateException if TextUnit other than SP unit is specified.
+     */
+    @Stable
+    open fun TextUnit.toDp(): Dp
+}
+```
 
 通过一步步查找 Density 接口的实现类，最终可以定位到 `AndroidDensity.android` 类，Jetpack Compose 就是在这里通过 Context 来获取对应的 `density` 和 `fontScale`
 
-![img](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202402260945861.awebp)
+```kotlin
+/**
+ * Creates a [Density] for this [Context].
+ *
+ * @param context density values will be extracted from this [Context]
+ */
+fun Density(context: Context): Density {
+  val fontScale = context.resources.configuration.fontScale
+  return DensityWithConverter(
+    context.resources.displayMetrics.density,
+    fontScale,
+    FontScaleConverterFactory.forScale(fontScale) ?: 							 LinearFontScaleConverter(fontScale)
+  )
+}
+
+private data class DensityWithConverter(
+  override val density: Float,
+  override val fontScale: Float,
+  private val converter: FontScaleConverter
+) : Density {
+
+  override fun Dp.toSp(): TextUnit {
+    return converter.convertDpToSp(value).sp
+  }
+
+  override fun TextUnit.toDp(): Dp {
+    check(type == TextUnitType.Sp) { "Only Sp can convert to Px" }
+    return Dp(converter.convertSpToDp(value))
+  }
+}
+
+private data class LinearFontScaleConverter(private val fontScale: Float) : 	FontScaleConverter {
+  override fun convertSpToDp(sp: Float) = sp * fontScale
+  override fun convertDpToSp(dp: Float) = dp / fontScale
+}
+```
 
 此外，看过一些 Jetpack Compose 内部源码的同学应该知道，连接 Compose 和 View 体系之间的桥梁是 AndroidComposeView 类，而 AndroidComposeView 就通过 `fun Density(context: Context)` 方法来初始化其内部声明的 density 对象，CompositionLocals 类的 `ProvideCommonCompositionLocals` 方法又通过 LocalDensity 来将 AndroidComposeView 持有的 density 对象暴露给外部，从而使得框架内部和开发者均可以通过 `LocalDensity.current` 来获取到当前的 Density 对象，也即通过此方法拿到了 Android 系统的 `density` 和 `fontScale` 两个参数
 
