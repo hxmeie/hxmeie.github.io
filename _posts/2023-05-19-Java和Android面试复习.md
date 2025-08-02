@@ -2,7 +2,7 @@
 categories: [面试复习]
 title: Java和Android面试复习
 date: 2023-05-19 10:07:00 +0800
-pin: true
+pin: false
 last_modified_at: 2023-05-25 08:53:00 +0800
 tags: [复习]
 keywords: [面试,Android]
