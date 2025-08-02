@@ -6,6 +6,10 @@ pin: false
 last_modified_at: 2025-04-09 09:55:00 +0800
 tags: [compose]
 keywords: [屏幕适配,Compose,Android]
+image:
+  path: https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202508021653031.jpg
+  lqip: /assets/img/placeholder.webp
+  alt: Compose屏幕适配
 ---
 
 “受益”于目前 Android 手机各类屏幕尺寸长短不定、宽高比例大小不一的现状，**屏幕适配** 依然是 Android 应用开发时绕不开的问题

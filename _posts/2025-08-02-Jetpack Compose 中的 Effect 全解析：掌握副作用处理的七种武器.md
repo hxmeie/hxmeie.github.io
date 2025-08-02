@@ -6,6 +6,10 @@ pin: false
 last_modified_at: 2025-08-02 15:43:00 +0800
 tags: [android,compose,effect]
 keywords: [Compose,Effect]
+image:
+  path: https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202508021639717.jpg
+  lqip: /assets/img/placeholder.webp
+  alt: compose副作用
 ---
 
 

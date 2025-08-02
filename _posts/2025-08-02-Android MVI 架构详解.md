@@ -6,6 +6,10 @@ pin: false
 last_modified_at: 2025-08-02 15:41:00 +0800
 tags: [android,mvi,compose]
 keywords: [MVI]
+image:
+  path: https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202508021635671.jpg
+  lqip: /assets/img/placeholder.webp
+  alt: MVI架构详解
 ---
 
 ### 什么是 MVI 架构？

@@ -6,6 +6,10 @@ pin: false
 last_modified_at: 2025-08-02 15:51:00 +0800
 tags: [android]
 keywords: [flow,channel]
+image:
+  path: https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202508021647797.jpg
+  lqip: /assets/img/placeholder.webp
+  alt: StateFlow和Channel
 ---
 
 在 Kotlin 协程中，`StateFlow` 和 `Channel` 都是用于异步数据流和通信的强大工具，但它们的设计理念和适用场景有显著区别。理解这些区别对于选择正确的工具至关重要。
