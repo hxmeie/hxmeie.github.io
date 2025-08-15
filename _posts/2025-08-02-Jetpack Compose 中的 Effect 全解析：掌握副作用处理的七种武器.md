@@ -29,13 +29,13 @@ Jetpack Compose 主要提供了以下几种 Effect Handler，每种都有其特�
 
 | Effect Handler               | 主要用途                                                     | 执行时机                             | 是否需要 `key` | 是否创建协程 |
 | ---------------------------- | ------------------------------------------------------------ | ------------------------------------ | -------------- | ------------ |
-| **`LaunchedEffect`**         | 在 Composable 进入组合时执行一个**挂起函数**，通常用于**一次性**的异步操作，如网络请求、动画。 | 进入组合时，或 `key` 变化时          | **是**         | **是**       |
-| **`rememberCoroutineScope`** | 获取一个与 Composable 生命周期绑定的**协程作用域**，用于在**用户交互**等非 Composable 上下文中启动协程。 | 返回一个作用域，协程在需要时手动启动 | 否             | 返回作用域   |
-| **`SideEffect`**             | 在**每次** Composable 成功重组后执行一个**非挂起**的 Lambda 表达式，用于与非 Compose 管理的对象共享状态。 | 每次成功重组后                       | 否             | 否           |
-| **`DisposableEffect`**       | 用于需要**清理资源**的副作用。它在 `key` 变化或 Composable 退出组合时执行清理逻辑。 | 进入组合时，或 `key` 变化时          | **是**         | 否           |
-| **`rememberUpdatedState`**   | 在一个可能重启的 Effect 中引用一个**最新的值**，而**不会**导致 Effect 重启。 | 返回一个 State 对象                  | 否             | 否           |
-| **`produceState`**           | 将**非 Compose 状态**（如 `Flow`）转换为 Compose 的 `State`。 | 进入组合时，或 `key` 变化时          | **是**         | **是**       |
-| **`derivedStateOf`**         | 当一个或多个 `State` 对象发生变化时，**派生**并**缓存**一个新的 `State` 对象，用于优化重组性能。 | 当依赖的 State 变化时                | 否             | 否           |
+| **`LaunchedEffect`**         | 在 Composable 进入组合时<br>执行一个**挂起函数**，通常用<br>于**一次性**的异步操作，如网<br>络请求、动画。 | 进入组合时，<br>或 `key` 变化时          | **是**         | **是**       |
+| **`rememberCoroutineScope`** | 获取一个与Composable生<br>命周期绑定的**协程作用域**，<br>用于在**用户交互**等非 Com<br>-posable上下文中启动协程。 | 返回一个作用域，<br>协程在需要时手<br>动启动 | 否             | 返回作用域   |
+| **`SideEffect`**             | 在**每次** Composable 成<br>功重组后执行一个**非挂起**的 <br>Lambda 表达式，用于与非<br>Compose 管理的对象共享状态。 | 每次成功重组后                       | 否             | 否           |
+| **`DisposableEffect`**       | 用于需要**清理资源**的副<br>作用。它在 `key` 变化或 <br>Composable 退出组合时执行<br>清理逻辑。 | 进入组合时，或 <br>`key` 变化时          | **是**         | 否           |
+| **`rememberUpdatedState`**   | 在一个可能重启的 Effect <br>中引用一个**最新的值**，而**不会**导<br>致 Effect 重启。 | 返回一个 State <br>对象                  | 否             | 否           |
+| **`produceState`**           | 将**非 Compose 状态**（如<br> `Flow`）转换为Compose的 <br>`State`。 | 进入组合时，或 <br>`key` 变化时          | **是**         | **是**       |
+| **`derivedStateOf`**         | 当一个或多个 `State` 对象发<br>生变化时，**派生**并**缓存**一个新的<br> `State` 对象，用于优化重组性能。 | 当依赖的 State <br>变化时                | 否             | 否           |
 
 ------
 

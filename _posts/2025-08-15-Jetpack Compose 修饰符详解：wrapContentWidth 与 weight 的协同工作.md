@@ -105,7 +105,10 @@ fun DefaultPreview() {
 
 **预览效果分析:**
 
-<img src="https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20250815140034026.png" alt="iShot_2025-08-15_11.33.32" style="zoom: 25%;" /><img src="https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20250815140059448.png" alt="iShot_2025-08-15_11.35.26" style="zoom:25%;" />
+<div style="text-align: center;">
+  <img src="https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20250815140034026.png" alt="iShot_2025-08-15_11.33.32" style="display: inline-block;zoom: 20%;" />
+  <img src="https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20250815140059448.png" alt="iShot_2025-08-15_11.35.26" style="display: inline-block;zoom:20%;" />
+</div>
 
 在上述示例中，你会看到：
 

@@ -282,9 +282,9 @@ MVI 经常被拿来与 MVVM (Model-View-ViewModel) 进行比较。它们的主�
 
 | 特性         | MVVM                                                         | MVI                                                          |
 | ------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| **数据流**   | 通常是双向的（通过数据绑定），但也可以实现单向。             | 严格的单向数据流。                                           |
-| **状态管理** | ViewModel 可能会暴露多个可变的 `LiveData` 或 `StateFlow` 来代表不同的 UI 状态。 | ViewModel 只暴露一个唯一的、不可变的 `State` 对象（通常通过 `StateFlow`）。 |
-| **用户操作** | View 直接调用 ViewModel 的方法。                             | View 发送 `Intent` (意图) 给 ViewModel。                     |
+| **数据流**   | 通常是双向的（通过数据绑定），但也可以实现<br>单向。             | 严格的单向数据流。                                           |
+| **状态管理** | ViewModel 可能会暴露多个可变的 `LiveData` 或 <br>`StateFlow` 来代表不同的 UI 状态。 | ViewModel 只暴露一个唯一的、不可变的<br> `State` 对象（通常通过 `StateFlow`）。 |
+| **用户操作** | View 直接调用 ViewModel 的方法。                             | View 发送 `Intent` (意图) <br>给 ViewModel。                     |
 
 
 
