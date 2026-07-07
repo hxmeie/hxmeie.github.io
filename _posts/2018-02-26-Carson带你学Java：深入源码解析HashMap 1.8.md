@@ -9,8 +9,6 @@ keywords: [HashMap, JDK1.8, 源码解析, 红黑树, Java集合]
 
 > 本文转载自 [Carson带你学Java：深入源码解析HashMap 1.8](https://blog.csdn.net/carson_ho/article/details/79373134)。版权归原作者所有，此处仅作个人学习备份。
 
-![](https://i-blog.csdnimg.cn/blog_migrate/2c1e35d7067fcf3e8f64c81ac4c79eaf.png)
-
 前言
 --
 
@@ -26,7 +24,7 @@ keywords: [HashMap, JDK1.8, 源码解析, 红黑树, Java集合]
 目录
 --
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/4614f7a1ac7200dc53b7a03c98cd64bb.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707193948960.png)
 
 ---
 
@@ -35,7 +33,7 @@ keywords: [HashMap, JDK1.8, 源码解析, 红黑树, Java集合]
 
 * 类定义
 
-```
+```java
 public class HashMap<K,V>
          extends AbstractMap<K,V> 
          implements Map<K,V>, Cloneable, Serializable
@@ -44,7 +42,7 @@ public class HashMap<K,V>
 
 * 主要简介
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/e319d8f82b05c4a11cdf5cf75479595e.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194023591.png)
 
 * `HashMap` 的实现在 `JDK 1.7` 和 `JDK 1.8` 差别较大
 * 今天，我将对照 `JDK 1.7`的源码，在此基础上讲解 `JDK 1.8` 中 `HashMap` 的源码解析
@@ -58,17 +56,17 @@ public class HashMap<K,V>
 
 #### 2.1 主要介绍
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/e6c2f4debb3bb093ba4bfba6f69247c4.jpeg)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194058073.jpeg)
 
 > 关于 红黑树 了解：http://blog.csdn.net/v\_july\_v/article/details/6105630
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/b1118cd041456f5017102d86e1a3102a.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194142479.png)
 
 #### 2.2 存储流程
 
 > 注：为了让大家有个感性的认识，只是简单的画出存储流程，更加详细 & 具体的存储流程会在下面源码分析中给出
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/dceb7d122ae1ef13aef767863b6f26e9.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194333048.png)
 
 #### 2.3 数组元素 & 链表节点的 实现类
 
@@ -80,7 +78,7 @@ public class HashMap<K,V>
 
 > 具体分析请看注释
 
-```
+```java
 /** 
   * Node  = HashMap的内部类，实现了Map.Entry接口，本质是 = 一个映射(键值对)
   * 实现了getKey()、getValue()、equals(Object o)和hashCode()等方法
@@ -141,7 +139,7 @@ public class HashMap<K,V>
 
 * `HashMap`中的红黑树节点 采用 `TreeNode` 类 实现
 
-```
+```java
  /**
   * 红黑树节点 实现类：继承自LinkedHashMap.Entry<K,V>类
   */
@@ -179,7 +177,7 @@ public class HashMap<K,V>
 
 > 与 `JDK 1.7` 基本相同
 
-```
+```java
 V get(Object key); // 获得指定键的值
 V put(K key, V value);  // 添加键值对
 void putAll(Map<? extends K, ? extends V> m);  // 将指定Map中的键值对 复制到 此Map中
@@ -210,7 +208,7 @@ boolean isEmpty(); // 判断HashMap是否为空；size == 0时 表示为 空
 
 * 示例代码
 
-```
+```java
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -319,7 +317,7 @@ public class HashMapTest {
 
 * 运行结果
 
-```
+```bash
 方法1
 Java2
 iOS3
@@ -364,7 +362,7 @@ Android1
 * `HashMap`中的主要参数 同 `JDK 1.7` ，即：容量、加载因子、扩容阈值
 * 但由于数据结构中引入了 红黑树，故加入了 **与红黑树相关的参数**。具体介绍如下：
 
-```
+```java
  /** 
    * 主要参数 同  JDK 1.7 
    * 即：容量、加载因子、扩容阈值（要求、范围均相同）
@@ -407,11 +405,11 @@ Android1
 
 > 同 `JDK 1.7`，但由于其重要性，故此处再次说明
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/cc770dc2e10a0dfa3084781d7d8605fb.jpeg)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194436226.jpeg)
 
 * 总结 数据结构 & 参数方面与 `JDK 1.7`的区别
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/3594a8ad23fd83b08cb6de22511eac2b.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194443822.png)
 
 ---
 
@@ -421,7 +419,7 @@ Android1
 * 本次的源码分析主要是根据 **使用步骤** 进行相关函数的详细分析
 * 主要分析内容如下：
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/2649a3a3664054c288035a1a25bf808c.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194453461.png)
 
 * 下面，我将对每个步骤内容的主要方法进行详细分析
 
@@ -429,7 +427,7 @@ Android1
 
 > 此处主要分析的构造函数 类似 `JDK 1.7`
 
-```
+```java
 /**
   * 函数使用原型
   */
@@ -539,7 +537,7 @@ public class HashMap<K,V>
 
 * 在该步骤中，与`JDK 1.7`的差别较大：
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/104f5405fc47372313fa8d638b3cee6a.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194509033.png)
 
 > 下面会对上述区别进行详细讲解
 
@@ -547,11 +545,11 @@ public class HashMap<K,V>
 
 > 注：为了让大家有个感性的认识，只是简单的画出存储流程，更加详细 & 具体的存储流程会在下面源码分析中给出
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/976e5b1052f50cc26be5593bcfdcae72.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194517353.png)
 
 * 源码分析
 
-```
+```java
  /**
    * 函数使用原型
    */
@@ -576,7 +574,7 @@ public class HashMap<K,V>
 
 #### 分析1：hash（key）
 
-```
+```java
    /**
      * 分析1：hash(key)
      * 作用：计算传入数据的哈希码（哈希值、Hash值）
@@ -620,11 +618,11 @@ public class HashMap<K,V>
 > 1. 此处与 `JDK 1.7`的区别在于：`hash`值的求解过程中 哈希码的二次处理方式（扰动处理）
 > 2. 步骤1、2 = `hash`值的求解过程
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/9bd3e02460d162d09f05ca0d422dd98d.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194633865.png)
 
 * 计算示意图
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/736494db6bf56999ea39e41c5968ca70.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194640228.png)
 
 ---
 
@@ -643,7 +641,7 @@ public class HashMap<K,V>
 * 结论：容易出现 哈希码 与 数组大小范围不匹配的情况，即 计算出来的哈希码可能 不在数组大小范围内，从而导致无法匹配存储位置
 * 原因描述
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/00bb042f3686a408ab79db9f01aa049e.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194647463.png)
 
 * 为了解决 “哈希码与数组大小范围不匹配” 的问题，`HashMap`给出了解决方案：**哈希码 与运算（&） （数组长度-1）**，即问题3
 
@@ -652,14 +650,14 @@ public class HashMap<K,V>
 * 结论：根据HashMap的容量大小（数组长度），按需取 哈希码一定数量的低位 作为存储的数组下标位置，从而 解决 “哈希码与数组大小范围不匹配” 的问题
 * 具体解决方案描述
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/1a08add863e7dc63ab5a404df58fbd0c.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194655263.png)
 
 #### 问题3：为什么在计算数组下标前，需对哈希码进行二次处理：扰动处理？
 
 * 结论：加大哈希码低位的随机性，使得分布更均匀，从而提高对应数组存储下标位置的随机性 & 均匀性，最终减少Hash冲突
 * 具体描述
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/588bddd4c6f029c692f358a8fee6c6d4.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194703869.png)
 
 至此，关于怎么计算 `key-value` 值存储在`HashMap`数组位置 & 为什么要这么计算，讲解完毕。
 
@@ -678,9 +676,9 @@ public class HashMap<K,V>
 
 > 与 `JDK 1.7`的区别： `JDK 1.7`只需判断 数组 & 链表
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/cd679e8cdc90557f7399ae10f7cef697.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194717021.png)
 
-```
+```java
    /**
      * 分析2：putVal(hash(key), key, value, false, true)
      */
@@ -826,17 +824,17 @@ public class HashMap<K,V>
 
 * 总结
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/2f523b054ae2a7b8f26fa8a3004c27de.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194730870.png)
 
 #### 主要讲解点2：扩容机制（即 resize（）函数方法）
 
 * 扩容流程如下
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/449a875eaaab08ee613e43cd38e117c9.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194753154.png)
 
 * 源码分析
 
-```
+```java
    /**
      * 分析4：resize（）
      * 该函数有2种使用情况：1.初始化哈希表 2.当前数组容量过小，需扩容
@@ -937,21 +935,21 @@ public class HashMap<K,V>
 
 * 扩容流程（含 与 `JDK 1.7` 的对比）
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/b25f0ae8bbd4b6163af1400f2a0b9ed0.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194807376.png)
 
 #### 此处主要讲解： `JDK 1.8`扩容时，数据存储位置重新计算的方式
 
 * 计算结论 & 原因解析
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/964ab6a3f84bc381c335064fca0963c7.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194817070.png)
 
 * 结论示意图
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/e38a20c49414ed7492c7fee89d81c0b8.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194826970.png)
 
 * 数组位置转换的示意图
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/9686ceaf50d851ca72e4c6bb4383d5a1.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194834658.png)
 
 * `JDK 1.8`根据此结论作出的新元素存储位置计算规则 非常简单，提高了扩容效率，具体如下图
 
@@ -962,11 +960,11 @@ public class HashMap<K,V>
 
 * 添加数据的流程
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/d85c155a3c0bd3a07aa068eafccc3949.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194842628.png)
 
 * 与 `JDK 1.7`的区别
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/9034a6998e328881b4b3efad959bc911.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194851971.png)
 
 至此，关于 `HashMap`的添加数据源码分析 分析完毕。
 
@@ -978,11 +976,11 @@ public class HashMap<K,V>
 * 假如理解了上述`put（）`函数的原理，那么`get（）`函数非常好理解，因为二者的过程原理几乎相同
 * `get（）`函数的流程如下：
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/04e0de00f268007aa5b65205f4324471.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194901598.png)
 
 * 源码分析
 
-```
+```java
 /**
    * 函数原型
    * 作用：根据键key，向HashMap获取对应的值
@@ -1045,7 +1043,7 @@ final Node<K,V> getNode(int hash, Object key) {
 
 * `HashMap`除了核心的`put（）`、`get（）`函数，还有以下主要使用的函数方法
 
-```
+```java
 void clear(); // 清除哈希表中的所有键值对
 int size();  // 返回哈希表中所有 键值对的数量 = 数组中的键值对 + 链表中的键值对
 boolean isEmpty(); // 判断HashMap是否为空；size == 0时 表示为 空 
@@ -1076,15 +1074,15 @@ boolean containsValue(Object value);  // 判断是否存在该值的键值对；
 
 * 数据结构 & 主要参数
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/a85b5ab111d31b620f0ffbd4f40f7a40.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194918987.png)
 
 * 添加 & 查询数据流程
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/347d00d56cfce9f49da55912b7e98946.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194929602.png)
 
 * 扩容机制
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/ccda0cc4c5244bcc5bfd7dba4a82e600.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194942344.png)
 
 ---
 
@@ -1098,15 +1096,15 @@ boolean containsValue(Object value);  // 判断是否存在该值的键值对；
 
 #### 7.1 数据结构
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/470ce42f476c99071f89ba8f314e3a28.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707194953029.png)
 
 #### 7.2 获取数据时（获取数据 类似）
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/90d25da3e38ed0429ec3752748d9ed67.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707195000364.png)
 
 #### 7.3 扩容机制
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/98ff372424749dfcfad85323b66467d7.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707195007290.png)
 
 ---
 
@@ -1115,19 +1113,19 @@ boolean containsValue(Object value);  // 判断是否存在该值的键值对；
 
 * 有几个小问题需要在此补充
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/6721f122b5392573e4014ef04e04ec10.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707195013923.png)
 
 * 具体如下
 
 #### 8.1 哈希表如何解决Hash冲突
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/98c32df30a1222f278ee89d0d18eb09c.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707195022753.png)
 
 #### 8.2 为什么HashMap具备下述特点：键-值（key-value）都允许为空、线程不安全、不保证有序、存储位置随时间变化
 
 * 具体解答如下
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/dcbfdc4e0b14469026bc031eba2446d7.jpeg)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707195032675.jpeg)
 
 * 下面主要讲解 `HashMap` 线程不安全的其中一个重要原因：多线程下容易出现`resize（）`死循环  
   **本质 = 并发 执行 `put（）`操作导致触发 扩容行为，从而导致 环形链表，使得在获取数据遍历链表时形成死循环，即`Infinite Loop`**
@@ -1135,7 +1133,7 @@ boolean containsValue(Object value);  // 判断是否存在该值的键值对；
 
 > 关于resize（）的源码分析已在上文详细分析，此处仅作重点分析：transfer（）
 
-```
+```java
 /**
    * 源码分析：resize(2 * table.length)
    * 作用：当容量不足时（容量 > 阈值），则扩容（扩到2倍）
@@ -1215,11 +1213,11 @@ void transfer(Entry[] newTable) {
 
 初始状态、步骤1、步骤2
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/3ca911ea66a88882fb2619404d7b141b.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707195051422.png)
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/b1fe59538347895fea8636d1a37b6c66.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707195054041.png)
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/e9d0dbfe7dc3e08ceba9c52dcd267f56.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707195057725.png)
 
 注：由于 `JDK 1.8` 转移数据操作 = **按旧链表的正序遍历链表、在新链表的尾部依次插入**，所以不会出现链表 **逆序、倒置**的情况，故不容易出现环形链表的情况。
 
@@ -1227,11 +1225,11 @@ void transfer(Entry[] newTable) {
 
 #### 8.3 为什么 HashMap 中 String、Integer 这样的包装类适合作为 key 键
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/1a3ee6518218251043809f3c5b3f7686.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707195105770.png)
 
 #### 8.4 HashMap 中的 `key`若 `Object`类型， 则需实现哪些方法？
 
-![示意图](https://i-blog.csdnimg.cn/blog_migrate/6b7c9f6a82ecc618bd122c312cd28228.png)
+![示意图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707195108168.png)
 
 至此，关于`HashMap`的所有知识讲解完毕。
 
