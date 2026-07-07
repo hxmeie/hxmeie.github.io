@@ -3,7 +3,7 @@ categories: [转载, Java]
 title: 这一次，彻底搞懂Java中的ReentrantLock实现原理
 date: 2021-06-19 10:00:00 +0800
 pin: false
-tags: [转载, Java]
+tags: [转载, java]
 keywords: [ReentrantLock, AQS, CLH队列, 公平锁, 可重入锁]
 ---
 

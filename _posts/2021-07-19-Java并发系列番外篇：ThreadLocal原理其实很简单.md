@@ -3,7 +3,7 @@ categories: [转载, Java]
 title: "Java并发系列番外篇：ThreadLocal原理其实很简单"
 date: 2021-07-19 10:00:00 +0800
 pin: false
-tags: [转载, Java]
+tags: [转载, java]
 keywords: [ThreadLocal, Java并发, ThreadLocalMap, 内存泄漏, 弱引用]
 ---
 

@@ -3,7 +3,7 @@ categories: [转载, Java]
 title: "Carson带你学Java：深入源码解析HashMap 1.8"
 date: 2018-02-26 10:00:00 +0800
 pin: false
-tags: [转载, Java]
+tags: [转载, java]
 keywords: [HashMap, JDK1.8, 源码解析, 红黑树, Java集合]
 ---
 

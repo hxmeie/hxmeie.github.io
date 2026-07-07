@@ -3,7 +3,7 @@ categories: [转载, Android]
 title: 关于Android Service真正的完全详解，你需要知道的一切
 date: 2016-09-29 10:00:00 +0800
 pin: false
-tags: [转载, android, Service]
+tags: [转载, android, service]
 keywords: [Service, 启动服务, 绑定服务, 前台服务, IntentService, 生命周期]
 ---
 

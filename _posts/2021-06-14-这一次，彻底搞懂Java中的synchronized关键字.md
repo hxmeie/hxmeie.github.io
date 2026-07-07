@@ -3,7 +3,7 @@ categories: [转载, Java]
 title: 这一次，彻底搞懂Java中的synchronized关键字
 date: 2021-06-14 10:00:00 +0800
 pin: false
-tags: [转载, Java]
+tags: [转载, java]
 keywords: [synchronized, 对象头, Monitor, 锁升级, 偏向锁]
 ---
 

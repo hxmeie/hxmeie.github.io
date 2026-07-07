@@ -3,7 +3,7 @@ categories: [转载, Java]
 title: 这一次，彻底搞懂Java并发包中的Atomic原子类
 date: 2021-06-26 10:00:00 +0800
 pin: false
-tags: [转载, Java]
+tags: [转载, java]
 keywords: [Atomic, CAS, Unsafe, ABA问题, 原子类]
 ---
 

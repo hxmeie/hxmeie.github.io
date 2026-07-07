@@ -3,7 +3,7 @@ categories: [转载, Java]
 title: 这一次，彻底搞懂Java内存模型与volatile关键字
 date: 2021-05-29 10:00:00 +0800
 pin: false
-tags: [转载, Java]
+tags: [转载, java]
 keywords: [Java内存模型, JMM, volatile, 可见性, 有序性]
 ---
 
