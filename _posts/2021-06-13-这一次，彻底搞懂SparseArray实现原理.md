@@ -3,7 +3,7 @@ categories: [转载, Android]
 title: 这一次，彻底搞懂SparseArray实现原理
 date: 2021-06-13 10:00:00 +0800
 pin: false
-tags: [转载, Android]
+tags: [转载, android]
 keywords: [SparseArray, ArrayMap, Android面试, 数据结构, 源码分析]
 ---
 

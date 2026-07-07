@@ -3,7 +3,7 @@ categories: [转载, Android]
 title: ViewModel源码研究之聊聊onSaveInstanceState和onRetainNonConfigurationInstance的区别
 date: 2021-07-22 10:00:00 +0800
 pin: false
-tags: [转载, Android]
+tags: [转载, android]
 keywords: [ViewModel, onSaveInstanceState, onRetainNonConfigurationInstance, Activity恢复, 源码]
 ---
 

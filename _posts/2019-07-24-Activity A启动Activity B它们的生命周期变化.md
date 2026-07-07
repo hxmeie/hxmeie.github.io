@@ -3,7 +3,7 @@ categories: [转载, Android]
 title: Activity A启动Activity B它们的生命周期变化
 date: 2019-07-24 10:00:00 +0800
 pin: false
-tags: [转载, Android]
+tags: [转载, android]
 keywords: [Activity, 生命周期, onStop, 透明主题, onResume]
 ---
 
@@ -15,7 +15,7 @@ keywords: [Activity, 生命周期, onStop, 透明主题, onResume]
 
 两个活动的生命周期变化为：
 
-```
+```bash
 //【1】部署程序
 D/MainActivity: onCreate------A
 D/MainActivity: onStart-------A
@@ -41,7 +41,7 @@ D/SecondActivity: onDestroy---B
 
 它们的生命周期的变化为：
 
-```
+```bash
 //【1】部署程序
 D/MainActivity: onCreate------A
 D/MainActivity: onStart-------A
@@ -64,11 +64,11 @@ D/SecondActivity: onDestroy---B
 
 Activity 的生命周期图：
 
-![Activity生命周期](https://i-blog.csdnimg.cn/blog_migrate/40182f6708c00acbf2f250cf19ad4a93.jpeg)
+![Activity生命周期](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260706173520135.jpeg)
 
 小笔记：(设置 Activity 的透明度为半透明)
 
-```
+```java
 //【1】AndroidManifest.xml里的Activity标签里配置透明主题：
 android:theme="@android:style/Theme.Translucent.NoTitleBar"
 
@@ -77,3 +77,4 @@ public class MainActivity extends Activity {...}
 ```
 
 第二步中设置透明主题的时候因为 Theme.AppCompat 中没有 Translucent，因此会导致程序崩溃。
+

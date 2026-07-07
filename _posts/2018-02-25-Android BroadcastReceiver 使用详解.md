@@ -3,7 +3,7 @@ categories: [转载, Android]
 title: Android BroadcastReceiver 使用详解
 date: 2018-02-25 10:00:00 +0800
 pin: false
-tags: [转载, Android]
+tags: [转载, android]
 keywords: [BroadcastReceiver, 静态注册, 动态注册, 本地广播, 有序广播]
 ---
 

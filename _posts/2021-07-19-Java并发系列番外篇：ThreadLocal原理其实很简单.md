@@ -23,7 +23,7 @@ keywords: [ThreadLocal, Java并发, ThreadLocalMap, 内存泄漏, 弱引用]
 
 ThreadLocal是一个泛型类，泛型表示ThreadLocal可以存储的类型，它的使用非常简单。举个例子，在子线程中用ThreadLcoal存储一个数字，然后分别在子线程和主线程将中来获取这个值，代码如下：
 
-```
+```java
 public static void main(String[] args) {
     ThreadLocal<Integer> threadLocal = new ThreadLocal<>();
 
@@ -48,7 +48,7 @@ public static void main(String[] args) {
 
 上述代码的打印结果如下：
 
-```
+```bash
 Thread-0 value = 10
 main value = null
 ```
@@ -57,13 +57,13 @@ main value = null
 
 除此之外，ThreadLocal可以设置全局的初始值，代码如下：
 
-```
+```java
 ThreadLocal<Integer> threadLocal = ThreadLocal.withInitial(() -> 10);
 ```
 
 通过ThreadLocal的withInitial方法指定初始值为10，接着分别从子线程和主线程中取值，打印结果如下：
 
-```
+```bash
 Thread-0 value = 10
 main value = 10
 ```
@@ -80,7 +80,7 @@ ThreadLocal究竟是如何做到存储的数据只被设置数据的线程可见
 
 set方法的源码比较简单，如下：
 
-```
+```java
 public void set(T value) {
     // 获取当前线程
     Thread t = Thread.currentThread();
@@ -106,7 +106,7 @@ void createMap(Thread t, T firstValue) {
 
 接下来我们看如何从ThreadLocal中取出数据，get方法的代码如下：
 
-```
+```java
 public T get() {
     // 获取当前线程
     Thread t = Thread.currentThread();
@@ -155,7 +155,7 @@ protected T initialValue() {
 
 从前两小节其实我们已经知道，ThreadLocalMap是一个存储K-V类型的数据结构，并且Thread类中维护了一个ThreadLocalMap的成员变量。代码如下：
 
-```
+```java
 public class Thread implements Runnable {
 
     ThreadLocal.ThreadLocalMap threadLocals = null;
@@ -165,7 +165,7 @@ public class Thread implements Runnable {
 
 可以看到ThreadLocalMap是ThreadLocal的内部类,ThreadLocalMap的类结构如下：
 
-```
+```java
 static class ThreadLocalMap {
 
     private Entry[] table;
@@ -176,7 +176,7 @@ static class ThreadLocalMap {
 
 ThreadLocalMap内部维护了一个Entry数组，和一个int类型的size。Entry是ThreadLocalMap的内部类，它就是对我们设置的value的封装，代码如下：
 
-```
+```java
 static class Entry extends WeakReference<ThreadLocal<?>> {
     Object value;
 
@@ -191,7 +191,7 @@ static class Entry extends WeakReference<ThreadLocal<?>> {
 
 接下来看ThreadLocalMap的set方法。
 
-```
+```java
 private void set(ThreadLocal<?> key, Object value) {
 
 
@@ -227,7 +227,7 @@ private void set(ThreadLocal<?> key, Object value) {
 
 接下来看ThreadLocalMap的getEntry方法，这里不用想也应该知道getEntry方法一定是从哈希表中取数据的。它的代码如下：
 
-```
+```java
 private Entry getEntry(ThreadLocal<?> key) {
     int i = key.threadLocalHashCode & (table.length - 1);
     Entry e = table[i];
@@ -254,7 +254,7 @@ private Entry getEntry(ThreadLocal<?> key) {
 
 我们来看下面的分析。
 
-![threadlocal.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/41ed98d3156c4dd4bb4ed41c22ad3b55~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
+![threadlocal.png](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707103514788.awebp)
 
 如上图所示，在ThreadLocal中存在一个这样的引用链。如果Thread一直在运行，那么此时由于强引用的value不能被回收，故此种情况下也可能出现内存泄漏的问题。因此，通常来说，在不需要使用这个ThreadLocal变量的使用，需要调用remove方法来避免内存泄漏的问题。
 
@@ -264,7 +264,7 @@ private Entry getEntry(ThreadLocal<?> key) {
 
 当然，由于可能存在多个ThreadLocal的情况，如下代码：
 
-```
+```java
 ThreadLocal<Integer> threadLocal = new ThreadLocal<>();
 ThreadLocal<Integer> threadLocal2 = new ThreadLocal<>();
 
@@ -274,4 +274,4 @@ threadLocal2.set(2);
 
 因此，可以给出ThreadLocalMap的结构图如下：
 
-![threadlocal2.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1010099b52444e5a8eb1b5e1ef2c15f0~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
+![threadlocal2.png](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707103541305.awebp)

@@ -30,13 +30,17 @@ Java内存模型英文为 **Java Memory Model**，简称为JMM。JMM本身是一
 
 为了解决缓存一致性问题，设计者们为CPU制定了一个读写协议，并要求各个CPU在读写缓存时都要遵循这一协议。这类协议有MSI、MESI、MOSI等，被称为**缓存一致性协议**。只要CPU的读写遵循了缓存一致性协议就能很好的解决缓存一致性问题了。关于协议的具体实现，不是本篇文章的内容，这里不再赘述。
 
+![缓存一致性](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707104850732.awebp)
+
 ### 2.Java内存模型（JMM）
 
 在了解了缓存一致性问题后，我们继续回到JMM。在本章开篇，我们为JMM下了一个比较抽象的定义。并且提到JMM可以简单的理解为线程访问共享变量的方式。可见JMM是Java并发编程的底层基础，想要深入了解并发编程，就需要先理解JMM。那么本节内容，我们就来具体的谈一谈JMM。
 
 **JMM规定所有变量都存储在主内存中，每条线程还有自己的工作内存。线程的工作内存中保存了被线程使用的变量的主内存副本，线程对变量的所有操作都必须在工作内存中进行，而不能直接读写主内存中的数据。不同线程之间也无法直接访问对方的工作内存中的变量，线程间变量值的传递需要通过主内存来完成。** 也就是说Java线程之间的通信采用的是共享内存。
 
-看到这里是不是觉得似曾相识？没错，这里其实跟上一节**缓存一致性**中讲到的多CPU共享主内存是类似的。只不过在虚拟机中不是CPU，而是线程。每条线程都有自己的工作空间，而共享变量存储在共享内存中。线程在运行时会首先将共享内存中的数据读取到自己的工作内存，即在线程的工作内存中复制了一个共享变量的副本，然后对其进行计算，计算完成后线程会将自己工作内存中的这个共享变量副本同步回主内存。
+看到这里是不是觉得似曾相识？没错，这里其实跟上一节**缓存一致性**中讲到的多CPU共享主内存是类似的。只不过在虚拟机中不是CPU，而是线程。每条线程都有自己的工作空间，而共享变量存储在共享内存中。线程在运行时会首先将共享内存中的数据读取到自己的工作内存，即在线程的工作内存中复制了一个共享变量的副本，然后对其进行计算，计算完成后线程会将自己工作内存中的这个共享变量副本同步回主内存。线程、工作内存、与主内存的关系如下图所示：
+
+![内存关系](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707105101479.awebp)
 
 到这里，大家对于Java的内存模型应该都有了一个深入的了解。但是，很多同学还是会疑惑Java内存模型和Java的内存区域到底有什么关系？其实，Java内存模型与Java内存区域并不是同一个层次对内存的划分，可以说两者并没有什么关系。但是它们之间也存在着比较明显的对应关系，即主内存对应Java堆中的实例数据部分，而工作内存则对应虚拟机栈中的一些区域。
 
@@ -66,36 +70,36 @@ volatile经常被用到并发编程的场景中。它的作用有两个，即：
 
 看下面的一个例子：
 
-```
+```java
 public class VolatileDemo {
 
-    private static boolean ready;
+  private static boolean ready;
 
-    public static class MyThread extends Thread {
-        @Override
-        public void run() {
-            System.out.println("MyThread is running...");
-            while (!ready) ; // 如果ready为false，则死循环
-            System.out.println("MyThread is end");
-        }
+  public static class MyThread extends Thread {
+    @Override
+    public void run() {
+      System.out.println("MyThread is running...");
+      while (!ready) ; // 如果ready为false，则死循环
+      System.out.println("MyThread is end");
     }
+  }
 
 
-    public static void main(String[] args) throws InterruptedException {
-        new MyThread().start();
-        Thread.sleep(1000);
-        ready = true;
-        System.out.println("ready = " + ready);
-        Thread.sleep(5000);
-        System.out.println("main thread is end.");
-    }
+  public static void main(String[] args) throws InterruptedException {
+    new MyThread().start();
+    Thread.sleep(1000);
+    ready = true;
+    System.out.println("ready = " + ready);
+    Thread.sleep(5000);
+    System.out.println("main thread is end.");
+  }
 
 }
 ```
 
 代码中定义了一个boolean类型的成员变量ready,其默认值为false。在MyThread线程中判断如果ready为false时则进行死循环。接下来在main方法中开启MyThread线程，并在睡眠1s后将ready修改为true。正常情况下ready修改为true后MyThread线程中的死循环则会停止，并打印“MyThread is end"。但是来看下运行效果跟我们猜想是否一致，打印日志如下：
 
-```
+```bash
 MyThread is running...
 ready = true
 main thread is end.
@@ -105,7 +109,7 @@ main thread is end.
 
 那么接下来我们将成员变量ready使用volatile关键字修饰后，再运行看打印日志：
 
-```
+```bash
 MyThread is running...
 MyThread is end
 ready = true
@@ -118,27 +122,27 @@ main thread is end.
 
 我们知道，编译器为了优化程序性能，可能会在编译时对字节码指令进行重排序。重排序后的指令在单线程中运行时没有问题的，但是如果在多线程中，重排序后的代码则可能会出现问题。因此，一般在多线程并发情况下我们都应该禁止指令重排序的优化。而volatile关键字就可以禁止编译器对字节码进行重排序。volatile保证有序性在我们平时开发中有一个很常见的例子，即双重锁校验的单例模式下需要使用volatile关键字来禁止指令重排序。我们来看下代码：
 
-```
+```java
 public class DoubleCheckLock {
 
-    private volatile static DoubleCheckLock instance;
+  private volatile static DoubleCheckLock instance;
 
-    private DoubleCheckLock(){}
+  private DoubleCheckLock(){}
 
-    public static DoubleCheckLock getInstance(){
+  public static DoubleCheckLock getInstance(){
 
-        //第一次检测
-        if (instance==null){
-            //同步
-            synchronized (DoubleCheckLock.class){
-                if (instance == null){
-                    //多线程环境下可能会出现问题的地方
-                    instance = new DoubleCheckLock();
-                }
-            }
+    //第一次检测
+    if (instance==null){
+      //同步
+      synchronized (DoubleCheckLock.class){
+        if (instance == null){
+          //多线程环境下可能会出现问题的地方
+          instance = new DoubleCheckLock();
         }
-        return instance;
+      }
     }
+    return instance;
+  }
 }
 ```
 

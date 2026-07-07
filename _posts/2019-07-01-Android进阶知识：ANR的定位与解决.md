@@ -3,7 +3,7 @@ categories: [转载, Android]
 title: "Android进阶知识：ANR的定位与解决"
 date: 2019-07-01 10:00:00 +0800
 pin: false
-tags: [转载, Android]
+tags: [转载, android]
 keywords: [ANR, Android, 主线程, 卡顿, 性能优化]
 ---
 

@@ -3,7 +3,7 @@ categories: [转载, Android]
 title: Kotlin 异步 - Flow 限流的应用场景及原理
 date: 2021-07-28 10:00:00 +0800
 pin: false
-tags: [转载, Android]
+tags: [转载, android]
 keywords: [Kotlin, Flow, 协程, 防抖, 限流]
 ---
 

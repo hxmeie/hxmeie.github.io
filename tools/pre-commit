@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# MyBlog 的 git pre-commit 钩子：提交前检查标签/分类 slug 冲突。
+# 通过 tools/install-hooks.sh 安装到 .git/hooks/pre-commit。
+set -euo pipefail
+
+repo_root="$(git rev-parse --show-toplevel)"
+ruby "$repo_root/tools/check-tag-conflicts.rb"
