@@ -9,8 +9,6 @@ keywords: [ThreadLocal, Java并发, ThreadLocalMap, 内存泄漏, 弱引用]
 
 > 本文转载自 [Java并发系列番外篇：ThreadLocal原理其实很简单](https://juejin.cn/post/6986301941269659656)。版权归原作者所有，此处仅作个人学习备份。
 
-# Java并发系列番外篇：ThreadLocal原理其实很简单
-
 多线程并发是Java语言中非常重要的一块内容，同时，也是Java基础的一个难点。说它重要是因为多线程是日常开发中频繁用到的知识，说它难是因为多线程并发涉及到的知识点非常之多，想要完全掌握Java的并发相关知识并非易事。也正因此，Java并发成了Java面试中最高频的知识点之一。本系列文章将从Java内存模型、volatile关键字、synchronized关键字、ReetrantLock、Atomic并发类以及线程池等方面来系统的认识Java的并发知识。通过本系列文章的学习你将深入理解volatile关键字的作用，了解到synchronized实现原理、AQS和CLH队列锁，清晰的认识自旋锁、偏向锁、乐观锁、悲观锁...等等一系列让人眼花缭乱的并发知识。
 
 多线程并发时要解决的一个最重要的问题是多线程共享内存变量同步的问题。前几篇文章无论是volatile、synchronized又或是ReentrantLock和Atomic类无不是解决这一问题。而很多情况下我们只希望某个变量对其他线程不可见，只允许某一个线程访问，而ThreadLocal就提供了这样的能力。本文章是Java并发系列的一个扩展篇，来详细的认识一下ThreadLocal及它的实现原理。

@@ -16,7 +16,7 @@ image:
 
 为此，Android为我们提供了**ViewModel**类，专门用于存放应用程序页面所需的数据。它将页面所需的数据从页面中剥离出来，页面只需要处理用户交互，以及负责展示数据的工作。
 
-![v2-48b149d7b2f75c79173ff6f7a32b62db_720w](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202305191323393.jpeg)
+![v2-48b149d7b2f75c79173ff6f7a32b62db_720w](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260713191827410.jpeg)
 
 另外，如果我们的应用程序支持横竖屏切换，当用户旋转手机屏幕时，我们还需要考虑数据的存储与恢复。如果数据不进行存储，那么通常我们还需要重新去获取一次。
 
@@ -122,8 +122,6 @@ public class MyFragment extends Fragment {
 
 
 ###  1.ViewModelProvider的构造方法
-
-
 
 ```java
 public ViewModelProvider(@NonNull ViewModelStoreOwner owner) {
@@ -322,13 +320,7 @@ public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
 
 其实就是通过构造方法反射创建了ViewModel而已。
 
-
-
 总体来看ViewModelProvider的任务就是创建ViewModel并将ViewModel存储到ViewModelStore中。而ViewModel的创建都是通过Model.class的构造方法反射创建的。
-
-
-
-
 
 ### 3. ViewModelStore
 
@@ -461,11 +453,7 @@ public Object getLastNonConfigurationInstance() {
 
 getLastNonConfigurationInstance的调用其实前边代码已经有提到，就是在ensureViewModelStore中。ensureViewModelStore除了在getViewModelProvider中调用外，还会在生命周期的回调中被调用，代码在上边也有贴出。
 
-
-
 最后，还有一点比较重要，就是onRetainNonConfigurationInstance的调用时机，这点涉及到的东西也比较多，就不再这里赘述了，可以参考[ViewModel源码研究之聊聊onSaveInstanceState和onRetainNonConfigurationInstance的区别](https://juejin.cn/post/6987566061499449357)这篇文章
-
-
 
 
 

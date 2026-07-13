@@ -23,25 +23,25 @@ keywords: [ReentrantLock, AQS, CLH队列, 公平锁, 可重入锁]
 
 ```java
 public class ReentrantLockDemo {
-    // 实例化一个非公平锁，构造方法的参数为true表示公平锁，false为非公平锁。
-    private final ReentrantLock lock = new ReentrantLock(false);
-    private int i;
+  // 实例化一个非公平锁，构造方法的参数为true表示公平锁，false为非公平锁。
+  private final ReentrantLock lock = new ReentrantLock(false);
+  private int i;
 
-    public void testLock() {
-        // 拿锁，如果拿不到会一直等待
-        lock.lock();
-        try {
-            // 再次尝试拿锁(可重入)，拿锁最多等待100毫秒
-            if (lock.tryLock(100, TimeUnit.MILLISECONDS))
-                i++;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } finally {
-            // 释放锁
-            lock.unlock(); 
-            lock.unlock();
-        }
+  public void testLock() {
+    // 拿锁，如果拿不到会一直等待
+    lock.lock();
+    try {
+      // 再次尝试拿锁(可重入)，拿锁最多等待100毫秒
+      if (lock.tryLock(100, TimeUnit.MILLISECONDS))
+        i++;
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    } finally {
+      // 释放锁
+      lock.unlock(); 
+      lock.unlock();
     }
+  }
 }
 ```
 
@@ -80,17 +80,17 @@ public class ReentrantLockDemo {
 ```java
 public class ReentrantLock implements Lock, java.io.Serializable {
 
-    private final Sync sync;
-    
-    public ReentrantLock() {
-        sync = new NonfairSync();
-    }
+  private final Sync sync;
 
-    public ReentrantLock(boolean fair) {
-        sync = fair ? new FairSync() : new NonfairSync();
-    }
-    
-    // ...省略其它代码
+  public ReentrantLock() {
+    sync = new NonfairSync();
+  }
+
+  public ReentrantLock(boolean fair) {
+    sync = fair ? new FairSync() : new NonfairSync();
+  }
+
+  // ...省略其它代码
 }
 ```
 
@@ -100,18 +100,18 @@ public class ReentrantLock implements Lock, java.io.Serializable {
 
 ```java
 public interface Lock {
-    // 获取锁
-    void lock();
-    // 获取可中断锁，即在拿锁过程中可中断，synchronized是不可中断锁。
-    void lockInterruptibly() throws InterruptedException;
-    // 尝试获取锁，成功返回true，失败返回false
-    boolean tryLock();
-    // 在给定时间内尝试获取锁，成功返回true，失败返回false
-    boolean tryLock(long time, TimeUnit unit) throws InterruptedException;
-    // 释放锁
-    void unlock();
-    // 等待与唤醒机制
-    Condition newCondition();
+  // 获取锁
+  void lock();
+  // 获取可中断锁，即在拿锁过程中可中断，synchronized是不可中断锁。
+  void lockInterruptibly() throws InterruptedException;
+  // 尝试获取锁，成功返回true，失败返回false
+  boolean tryLock();
+  // 在给定时间内尝试获取锁，成功返回true，失败返回false
+  boolean tryLock(long time, TimeUnit unit) throws InterruptedException;
+  // 释放锁
+  void unlock();
+  // 等待与唤醒机制
+  Condition newCondition();
 }
 ```
 
@@ -122,30 +122,30 @@ public interface Lock {
 ```java
 public class ReentrantLock implements Lock, java.io.Serializable {
 
-    private final Sync sync;
-    
-    public void lock() {
-        sync.acquire(1);
-    }
-    
-    public void lockInterruptibly() throws InterruptedException {
-        sync.acquireInterruptibly(1);
-    }    
-    
-    public boolean tryLock() {
-        return sync.nonfairTryAcquire(1);
-    }
-    
-    public boolean tryLock(long timeout, TimeUnit unit)
-            throws InterruptedException {
-        return sync.tryAcquireNanos(1, unit.toNanos(timeout));
-    }
-    
-    public void unlock() {
-        sync.release(1);
-    }
-    
-    // ...省略其它代码
+  private final Sync sync;
+
+  public void lock() {
+    sync.acquire(1);
+  }
+
+  public void lockInterruptibly() throws InterruptedException {
+    sync.acquireInterruptibly(1);
+  }    
+
+  public boolean tryLock() {
+    return sync.nonfairTryAcquire(1);
+  }
+
+  public boolean tryLock(long timeout, TimeUnit unit)
+    throws InterruptedException {
+    return sync.tryAcquireNanos(1, unit.toNanos(timeout));
+  }
+
+  public void unlock() {
+    sync.release(1);
+  }
+
+  // ...省略其它代码
 }
 ```
 
@@ -154,61 +154,61 @@ public class ReentrantLock implements Lock, java.io.Serializable {
 ```java
 abstract static class Sync extends AbstractQueuedSynchronizer {
 
-        // 尝试获取非公平锁
-        final boolean nonfairTryAcquire(int acquires) {
-            final Thread current = Thread.currentThread();
-            int c = getState();
-            // 未上锁状态
-            if (c == 0) {
-                // 通过CAS尝试拿锁
-                if (compareAndSetState(0, acquires)) {                    
-                    // 设置持有排他锁的线程
-                    setExclusiveOwnerThread(current);
-                    return true;
-                }
-            }
-            // 如果是已上锁状态，判断持有锁的线程是不是自己，这里即可重入锁的实现
-            else if (current == getExclusiveOwnerThread()) {
-                int nextc = c + acquires;
-                if (nextc < 0) // overflow
-                    throw new Error("Maximum lock count exceeded");
-                setState(nextc);
-                return true;
-            }
-            return false;
-        }
-        // 释放锁
-        protected final boolean tryRelease(int releases) {
-            int c = getState() - releases;
-            if (Thread.currentThread() != getExclusiveOwnerThread())
-                throw new IllegalMonitorStateException();
-            boolean free = false;
-            if (c == 0) {
-                free = true;
-                setExclusiveOwnerThread(null);
-            }
-            setState(c);
-            return free;
-        }
-
-        protected final boolean isHeldExclusively() {
-            return getExclusiveOwnerThread() == Thread.currentThread();
-        }
-        // 获取持有锁的线程
-        final Thread getOwner() {
-            return getState() == 0 ? null : getExclusiveOwnerThread();
-        }
-        // 获取持有锁线程重入的次数
-        final int getHoldCount() {
-            return isHeldExclusively() ? getState() : 0;
-        }
-        // 是否上锁状态
-        final boolean isLocked() {
-            return getState() != 0;
-        }
-
-        // ...省略其他代码
+  // 尝试获取非公平锁
+  final boolean nonfairTryAcquire(int acquires) {
+    final Thread current = Thread.currentThread();
+    int c = getState();
+    // 未上锁状态
+    if (c == 0) {
+      // 通过CAS尝试拿锁
+      if (compareAndSetState(0, acquires)) {                    
+        // 设置持有排他锁的线程
+        setExclusiveOwnerThread(current);
+        return true;
+      }
     }
+    // 如果是已上锁状态，判断持有锁的线程是不是自己，这里即可重入锁的实现
+    else if (current == getExclusiveOwnerThread()) {
+      int nextc = c + acquires;
+      if (nextc < 0) // overflow
+        throw new Error("Maximum lock count exceeded");
+      setState(nextc);
+      return true;
+    }
+    return false;
+  }
+  // 释放锁
+  protected final boolean tryRelease(int releases) {
+    int c = getState() - releases;
+    if (Thread.currentThread() != getExclusiveOwnerThread())
+      throw new IllegalMonitorStateException();
+    boolean free = false;
+    if (c == 0) {
+      free = true;
+      setExclusiveOwnerThread(null);
+    }
+    setState(c);
+    return free;
+  }
+
+  protected final boolean isHeldExclusively() {
+    return getExclusiveOwnerThread() == Thread.currentThread();
+  }
+  // 获取持有锁的线程
+  final Thread getOwner() {
+    return getState() == 0 ? null : getExclusiveOwnerThread();
+  }
+  // 获取持有锁线程重入的次数
+  final int getHoldCount() {
+    return isHeldExclusively() ? getState() : 0;
+  }
+  // 是否上锁状态
+  final boolean isLocked() {
+    return getState() != 0;
+  }
+
+  // ...省略其他代码
+}
 ```
 
 可以看到Sync中的代码逻辑也并不复杂。通过nonfairTryAcquire方法实现非公平锁的拿锁操作，tryRelease则实现了释放锁的操作。其它还有几个与锁状态相关的方法。细心的同学会发现Sync对锁状态的判断都是通过state来实现的，state为0表示未加锁状态，state大于0表示加锁状态。关于state我们在后文中还会提及。
@@ -232,30 +232,30 @@ FairSync公平锁的代码如下：
 
 ```java
 static final class FairSync extends Sync {
-        protected final boolean tryAcquire(int acquires) {
-            final Thread current = Thread.currentThread();
-            int c = getState();
-            // 未上锁状态
-            if (c == 0) {
-                // 首先判断没有等待节点时才会开启CAS去拿锁
-                if (!hasQueuedPredecessors() &&
-                    compareAndSetState(0, acquires)) {
-                    // 设置持有排他锁的线程
-                    setExclusiveOwnerThread(current);
-                    return true;
-                }
-            }
-            // 与非公平锁一样，持有锁线程是自己，则可重入
-            else if (current == getExclusiveOwnerThread()) {
-                int nextc = c + acquires;
-                if (nextc < 0)
-                    throw new Error("Maximum lock count exceeded");
-                setState(nextc);
-                return true;
-            }
-            return false;
-        }
+  protected final boolean tryAcquire(int acquires) {
+    final Thread current = Thread.currentThread();
+    int c = getState();
+    // 未上锁状态
+    if (c == 0) {
+      // 首先判断没有等待节点时才会开启CAS去拿锁
+      if (!hasQueuedPredecessors() &&
+          compareAndSetState(0, acquires)) {
+        // 设置持有排他锁的线程
+        setExclusiveOwnerThread(current);
+        return true;
+      }
     }
+    // 与非公平锁一样，持有锁线程是自己，则可重入
+    else if (current == getExclusiveOwnerThread()) {
+      int nextc = c + acquires;
+      if (nextc < 0)
+        throw new Error("Maximum lock count exceeded");
+      setState(nextc);
+      return true;
+    }
+    return false;
+  }
+}
 ```
 
 可以看到在tryAcquire中实现了公平锁的操作，这段代码与与非公平锁的实现其实只有一句之差。即公平锁先去判断了同步队列中是否有在等待的线程，如果没有才会去进行拿锁操作。而非公平锁不会管是否有同步队列，先去拿了再说。
@@ -268,17 +268,17 @@ AbstractQueuedSynchronizer可以翻译为队列同步器，通常简称为AQS。
 
 ```java
 public abstract class AbstractQueuedSynchronizer
-    extends AbstractOwnableSynchronizer
-    implements java.io.Serializable {
-    
-    protected AbstractQueuedSynchronizer() { } 
-    // 同步队列的头结点
-    private transient volatile Node head;
-    // 同步队列的尾结点
-    private transient volatile Node tail;
-    // 同步状态
-    private volatile int state;
-    
+  extends AbstractOwnableSynchronizer
+  implements java.io.Serializable {
+
+  protected AbstractQueuedSynchronizer() { } 
+  // 同步队列的头结点
+  private transient volatile Node head;
+  // 同步队列的尾结点
+  private transient volatile Node tail;
+  // 同步状态
+  private volatile int state;
+
 }
 ```
 
@@ -286,17 +286,17 @@ AbstractQueuedSynchronizer类继承了AbstractOwnableSynchronizer，AbstractOwna
 
 ```java
 public abstract class AbstractOwnableSynchronizer
-    implements java.io.Serializable {
+  implements java.io.Serializable {
 
-    private transient Thread exclusiveOwnerThread;
+  private transient Thread exclusiveOwnerThread;
 
-    protected final void setExclusiveOwnerThread(Thread thread) {
-        exclusiveOwnerThread = thread;
-    }
+  protected final void setExclusiveOwnerThread(Thread thread) {
+    exclusiveOwnerThread = thread;
+  }
 
-    protected final Thread getExclusiveOwnerThread() {
-        return exclusiveOwnerThread;
-    }
+  protected final Thread getExclusiveOwnerThread() {
+    return exclusiveOwnerThread;
+  }
 }
 ```
 
@@ -352,43 +352,43 @@ CLH队列是Craig、Landin and Hagersten队列的简称（Craig、Landin and Hag
 
 ```java
 static final class Node {
-    // 共享模式
-    static final Node SHARED = new Node();
-    // 独占模式
-    static final Node EXCLUSIVE = null;
-    // 线程已处于结束状态的标记
-    static final int CANCELLED =  1;
-    // 线程在等待被唤醒的标记
-    static final int SIGNAL    = -1;
-    // 条件状态
-    static final int CONDITION = -2;
-    // 共享模式下的状态
-    static final int PROPAGATE = -3;
-    // 表示等待状态，有以上四种
-    volatile int waitStatus;
-    // 同步队列的前驱节点
-    volatile Node prev;
-    // 同步队列的后继节点
-    volatile Node next;
-    // 阻塞状态或者等待状态的线程
-    volatile Thread thread;
+  // 共享模式
+  static final Node SHARED = new Node();
+  // 独占模式
+  static final Node EXCLUSIVE = null;
+  // 线程已处于结束状态的标记
+  static final int CANCELLED =  1;
+  // 线程在等待被唤醒的标记
+  static final int SIGNAL    = -1;
+  // 条件状态
+  static final int CONDITION = -2;
+  // 共享模式下的状态
+  static final int PROPAGATE = -3;
+  // 表示等待状态，有以上四种
+  volatile int waitStatus;
+  // 同步队列的前驱节点
+  volatile Node prev;
+  // 同步队列的后继节点
+  volatile Node next;
+  // 阻塞状态或者等待状态的线程
+  volatile Thread thread;
 
-    Node nextWaiter;
-    
-    Node() {}
+  Node nextWaiter;
 
-    Node(Node nextWaiter) {
-        this.nextWaiter = nextWaiter;
-        THREAD.set(this, Thread.currentThread());
-    }
+  Node() {}
 
-    Node(int waitStatus) {
-        WAITSTATUS.set(this, waitStatus);
-        THREAD.set(this, Thread.currentThread());
-    }
+  Node(Node nextWaiter) {
+    this.nextWaiter = nextWaiter;
+    THREAD.set(this, Thread.currentThread());
+  }
 
-   // ...省略其他代码
- 
+  Node(int waitStatus) {
+    WAITSTATUS.set(this, waitStatus);
+    THREAD.set(this, Thread.currentThread());
+  }
+
+  // ...省略其他代码
+
 }
 ```
 
@@ -404,33 +404,33 @@ static final class Node {
 ```java
 // 将当前线程封装成Node，并插入到队尾
 private Node addWaiter(Node mode) {
-    // 实例化包含当前线程的Node节点
-    Node node = new Node(mode);
-    // 执行死循环
-    for (;;) {
-        Node oldTail = tail;
-        if (oldTail != null) {
-            // 设置前驱节点为旧的尾结点
-            node.setPrevRelaxed(oldTail);
-            // 用CAS执行尾部结点替换
-            if (compareAndSetTail(oldTail, node)) {
-                // oldTail的next节点指向node
-                oldTail.next = node;
-                return node;
-            }
-        } else {
-            // 同步队列为空，初始化tail和head，初始化成功后会继续执行死循环，此时oldTail就不为null了
-            initializeSyncQueue();
-        }
+  // 实例化包含当前线程的Node节点
+  Node node = new Node(mode);
+  // 执行死循环
+  for (;;) {
+    Node oldTail = tail;
+    if (oldTail != null) {
+      // 设置前驱节点为旧的尾结点
+      node.setPrevRelaxed(oldTail);
+      // 用CAS执行尾部结点替换
+      if (compareAndSetTail(oldTail, node)) {
+        // oldTail的next节点指向node
+        oldTail.next = node;
+        return node;
+      }
+    } else {
+      // 同步队列为空，初始化tail和head，初始化成功后会继续执行死循环，此时oldTail就不为null了
+      initializeSyncQueue();
     }
+  }
 }
 // 初始化头结点和尾结点
 private final void initializeSyncQueue() {
-    Node h;
-    // 注意这里实例化了一个空的Node节点作为头结点
-    if (HEAD.compareAndSet(this, null, (h = new Node())))
-        // 将尾结点指向头结点
-        tail = h;
+  Node h;
+  // 注意这里实例化了一个空的Node节点作为头结点
+  if (HEAD.compareAndSet(this, null, (h = new Node())))
+    // 将尾结点指向头结点
+    tail = h;
 }
 ```
 
@@ -442,32 +442,32 @@ private final void initializeSyncQueue() {
 
 ```java
 final boolean acquireQueued(final Node node, int arg) {
-        boolean interrupted = false;
-        try {
-            // 开启自旋
-            for (;;) {
-                // 获取前驱节点
-                final Node p = node.predecessor();
-                // 如果前驱节点就是head节点了则执行tryAcquire尝试获取锁
-                if (p == head && tryAcquire(arg)) {
-                    // 获取到同步状态后，将当前node设置为头结点
-                    setHead(node);
-                    // 置空后继节点
-                    p.next = null; // help GC
-                    return interrupted;
-                }
-                // p不是头结点，则判断是否要挂起线程
-                if (shouldParkAfterFailedAcquire(p, node))
-                    interrupted |= parkAndCheckInterrupt();
-            }
-        } catch (Throwable t) {
-            cancelAcquire(node);
-            if (interrupted)
-                selfInterrupt();
-            throw t;
-        }
+  boolean interrupted = false;
+  try {
+    // 开启自旋
+    for (;;) {
+      // 获取前驱节点
+      final Node p = node.predecessor();
+      // 如果前驱节点就是head节点了则执行tryAcquire尝试获取锁
+      if (p == head && tryAcquire(arg)) {
+        // 获取到同步状态后，将当前node设置为头结点
+        setHead(node);
+        // 置空后继节点
+        p.next = null; // help GC
+        return interrupted;
+      }
+      // p不是头结点，则判断是否要挂起线程
+      if (shouldParkAfterFailedAcquire(p, node))
+        interrupted |= parkAndCheckInterrupt();
     }
- 
+  } catch (Throwable t) {
+    cancelAcquire(node);
+    if (interrupted)
+      selfInterrupt();
+    throw t;
+  }
+}
+
 ```
 
 在acquireQueued方法中开启自旋操作，并查看node的前驱节点是不是头结点
@@ -476,42 +476,42 @@ final boolean acquireQueued(final Node node, int arg) {
 
 ```java
 private void setHead(Node node) {
-        head = node;
-        // 置空当前线程
-        node.thread = null;
-        // 置空前驱节点
-        node.prev = null;
-    }  
+  head = node;
+  // 置空当前线程
+  node.thread = null;
+  // 置空前驱节点
+  node.prev = null;
+}  
 ```
 
 如果node的前驱节点不是头结点，那么则调用shouldParkAfterFailedAcquire方法判断是否要将线程挂起。如果是则调用parkAndCheckInterrupt将线程挂起。
 
 ```java
 private static boolean shouldParkAfterFailedAcquire(Node pred, Node node) {
-    // 获取node的等待状态
-    int ws = pred.waitStatus;
-    // 如果状态是等待唤醒则返回true
-    if (ws == Node.SIGNAL)
-        return true;
-    // 状态大于0说明线程处于结束状态
-    if (ws > 0) {
-        // 遍历前驱节点，知道找到线程不是结束状态的node
-        do {
-            node.prev = pred = pred.prev;
-        } while (pred.waitStatus > 0);
-        pred.next = node;
-    } else {
-        // 如果等待状态小于0却又不是SIGNAL状态,则CAS将其改为SIGNAL等待唤醒
-        pred.compareAndSetWaitStatus(ws, Node.SIGNAL);
-    }
-    return false;
+  // 获取node的等待状态
+  int ws = pred.waitStatus;
+  // 如果状态是等待唤醒则返回true
+  if (ws == Node.SIGNAL)
+    return true;
+  // 状态大于0说明线程处于结束状态
+  if (ws > 0) {
+    // 遍历前驱节点，知道找到线程不是结束状态的node
+    do {
+      node.prev = pred = pred.prev;
+    } while (pred.waitStatus > 0);
+    pred.next = node;
+  } else {
+    // 如果等待状态小于0却又不是SIGNAL状态,则CAS将其改为SIGNAL等待唤醒
+    pred.compareAndSetWaitStatus(ws, Node.SIGNAL);
+  }
+  return false;
 }
 
 private final boolean parkAndCheckInterrupt() {
-    // 挂起线程
-    LockSupport.park(this);
-    // 返回线程的状态
-    return Thread.interrupted();
+  // 挂起线程
+  LockSupport.park(this);
+  // 返回线程的状态
+  return Thread.interrupted();
 }  
 ```
 
