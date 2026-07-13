@@ -47,11 +47,11 @@ Reason：timeout publishing content providers
 
 关于`ANR`的定位这里举一个例子来看。这是我之前遇到的一次出现`ANR`的时候所解决问题的情况和解决步骤。
 
-![](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/7/1/16bab3b7588c00aa~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75.png)
+![](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260713104417186.png)
 
 首先当然是复现`ANR`现象，找准`ANR`出现的地方，查看对应代码，如果能直接看出来问题所在，找到代码中做的错误操作那么直接修改相应代码就解决问题了。但是如果没法轻易看出问题原因，接下来就只好去`Logcat`中查看对应的错误日志。
 
-```
+```bash
 07-22 21:39:17.019 819-851/? E/ActivityManager: ANR in com.xxxx.performance (com.xxxx.performance/.view.home.activity.MainActivity)
     PID: 7398
     Reason: Input dispatching timed out (com.xxxx.performance/com.xxxx.performance.view.home.activity.MainActivity, Waiting to send non-key event because the touched window has not finished processing certain input events that were delivered to it over 500.0ms ago.  Wait queue length: 29.  Wait queue head age: 8579.3ms.)
@@ -79,7 +79,7 @@ Reason：timeout publishing content providers
 
 从日志第一行开始看，可以看到发生错误的应用包名和类名，这里是`ANR in com.xxxx.performance (com.xxxx.performance/.view.home.activity.MainActivity)`。接着看到进程号`PID`为`7398`。发生`ANR`的`Reason`是`Input dispatching timed out`就是上面提到的第一种。再往下就是活跃进程的`CPU`占用率日志。
 
-```
+```bash
    124% 7398/com.xxxx.performance
    82% 819/system_server
    10% 996/com.android.systemui
@@ -91,7 +91,7 @@ Reason：timeout publishing content providers
 
 `traces.txt`文件位置在`/data/anr/`目录下，可以通过以下`adb`命令将其拷贝到sd卡目录下获取查看。
 
-```
+```bash
 adb shell
 cat  /data/anr/traces.txt  >/mnt/sdcard/traces.txt  
 exit
@@ -99,7 +99,7 @@ exit
 
 `traces.txt`里的信息：
 
-```
+```bash
 DALVIK THREADS (42):
 "main" prio=5 tid=1 Native
   | group="main" sCount=1 dsCount=0 obj=0x75ceafb8 self=0x55933ae7e0
@@ -168,7 +168,7 @@ Linux系统中内核线程ID: `sysTid=7398`与主线程的进程号相同
 堆栈地址和大小：`stack=0x7fc8d40000-0x7fc8d42000 stackSize=8MB`
 最后看到堆栈信息里的这一行：
 
-```
+```bash
 at com.xxxx.performance.view.home.fragment.AttendanceCheckInFragment.onNowTimeSuccess(AttendanceCheckInFragment.java:887)
 ```
 
@@ -180,7 +180,7 @@ at com.xxxx.performance.view.home.fragment.AttendanceCheckInFragment.onNowTimeSu
 
 以前一直认为在主线程做了耗时操作就会发生`ANR`，那么真的是这样吗？在`Activity`的`onCreate`方法里调用`Thread.sleep(60 * 1000)`让主线程`sleep`60秒，会导致应用程序`ANR`吗？写个`Demo`测试一下。
 
-```
+```java
 public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -200,9 +200,9 @@ public class MainActivity extends AppCompatActivity {
 
 如上代码，运行程序，结果应用没有发生ANR,在`sleep`了60秒后正常打印日志。
 
-![](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/6/29/16ba38019c708d14~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75.png)
+![](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260713104526899.png)
 
-再次运行程序，这回在程序运行后按下返回键查看现象：![](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/7/1/16bab4717bb6e7c4~tplv-t2oaga2asx-jj-mark:3024:0:0:0:q75.png)
+再次运行程序，这回在程序运行后按下返回键查看现象：![](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260713104539234.png)
 
 这次果然就`ANR`了。通过这个例子，显而易见的得到了这个问题的正确答案。在`Activity`的`onCreate`方法里调用`sleep`方法或者说做耗时操作，不一定会产生`ANR`。其实从`ANR`本身意为应用程序没有响应，同时根据上面总结的`ANR`原因就可以看出，耗时操作本身是不会产生`ANR`的，导致`ANR`的根本还是应用程序无法在一定时间内响应用户的操作。所以因为主线程被耗时操作占用了，主线成程无法对下一个操作进行响应才会`ANR`，没有需要响应的操作自然就不会产生`ANR`，或者应该这样说:主线程做耗时操作，非常容易引发`ANR`。
 
