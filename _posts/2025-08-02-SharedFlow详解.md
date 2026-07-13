@@ -3,7 +3,6 @@ categories: [知识点]
 title: SharedFlow 详解
 date: 2025-07-27 13:47:00 +0800
 pin: false
-last_modified_at: 2025-08-02 15:30:00 +0800
 tags: [android]
 keywords: [flow,SharedFlow]
 ---

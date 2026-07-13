@@ -33,6 +33,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # 拉取完整 git 历史，供 _plugins/posts-lastmod-hook.rb 计算 last_modified_at
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1 # v1.146.0
         with:

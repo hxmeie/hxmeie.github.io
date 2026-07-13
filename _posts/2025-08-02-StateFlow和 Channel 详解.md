@@ -3,7 +3,6 @@ categories: [知识点]
 title: StateFlow 和 Channel 详解
 date: 2025-07-29 14:09:00 +0800
 pin: false
-last_modified_at: 2025-08-02 15:51:00 +0800
 tags: [android]
 keywords: [flow,channel]
 image:

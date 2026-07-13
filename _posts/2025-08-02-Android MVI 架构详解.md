@@ -3,7 +3,6 @@ categories: [知识点]
 title: Android MVI架构详解
 date: 2025-07-29 14:15:00 +0800
 pin: false
-last_modified_at: 2025-08-02 15:41:00 +0800
 tags: [android,mvi,compose]
 keywords: [MVI]
 image:

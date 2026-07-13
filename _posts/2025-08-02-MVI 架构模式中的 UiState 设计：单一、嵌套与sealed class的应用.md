@@ -3,7 +3,6 @@ categories: [知识点]
 title: MVI 架构模式中的 UiState 设计：单一、嵌套与 `sealed class` 的应用
 date: 2025-07-29 18:27:00 +0800
 pin: false
-last_modified_at: 2025-08-02 15:43:00 +0800
 tags: [android,compose]
 keywords: [MVI]
 image:

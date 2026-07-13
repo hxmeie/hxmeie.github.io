@@ -2,7 +2,6 @@
 categories: [Blog]
 title: Kotlin 单例模式推荐写法
 date: 2020-02-03 15:40:20 +0800
-last_modified_at:
 tags: [kotlin]
 keywords: [kotlin,singleton]
 ---

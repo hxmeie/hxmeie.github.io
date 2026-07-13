@@ -2,7 +2,6 @@
 categories: [面试复习,知识点]
 title: HandlerThread实现原理
 date: 2023-05-19 14:33:00 +0800
-last_modified_at:
 tags: [转载,复习]
 keywords: [面试,Android,HandlerThread]
 ---

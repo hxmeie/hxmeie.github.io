@@ -2,7 +2,6 @@
 categories: [Blog]
 title: Markdown实用技巧－快速入门
 date: 2016-01-16 19:30:02 +0800
-last_modified_at:
 tags: [markdown]
 keywords: [Markdown,Markdown实用技巧,Markdown语法]
 ---
