@@ -5,7 +5,6 @@ date: 2026-07-14 17:41:26 +0800
 tags: [android, webview, jsbridge, javascript, 混合开发]
 keywords: [Android, WebView, JsBridge, JavaScript 交互, addJavascriptInterface, evaluateJavascript, shouldOverrideUrlLoading, onJsPrompt, WebMessageListener, WebViewCompat, DSBridge, Hybrid, 混合开发]
 mermaid: true
-description: 从 WebView 的通信边界讲起，梳理 Native 与 JS 的四五种原生交互方式，拆解 JsBridge 的本质与经典实现，并给出 WebMessageListener 与 addJavascriptInterface 两套现代方案的完整代码。
 ---
 
 混合开发（Hybrid）里绕不开一个问题：**运行在 WebView 里的网页（JS）和运行在 Android 虚拟机里的原生代码（Java/Kotlin），怎么互相调用？** 本文从底层原理讲起，梳理官方提供的几种交互方式，拆解 JsBridge 到底是什么、如何自己实现一个，最后给出目前推荐的两套现代方案及完整代码。
