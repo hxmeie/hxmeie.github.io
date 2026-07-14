@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-A personal Jekyll blog (哆啦A梦小短腿 / hxmeie) built on the [jekyll-theme-chirpy](https://github.com/cotes2020/jekyll-theme-chirpy) gem (v7.2.4, pulled in as a dependency via `Gemfile`, not forked into the repo). Deployed to GitHub Pages via GitHub Actions on every push to `master`. Content is almost entirely Chinese-language Android/Kotlin technical notes and interview prep.
+A personal Jekyll blog (哆啦A梦小短腿 / hxmeie) built on the [jekyll-theme-chirpy](https://github.com/cotes2020/jekyll-theme-chirpy) gem (v7.6.0, pulled in as a dependency via `Gemfile`, not forked into the repo). Deployed to GitHub Pages via GitHub Actions on every push to `master`. Content is almost entirely Chinese-language Android/Kotlin technical notes and interview prep.
 
 Because the theme is consumed as a gem rather than forked, this repo only contains site-specific content and overrides — there is no theme source code, no `assets/js` build pipeline, and no `package.json` to maintain here.
 
@@ -33,7 +33,12 @@ Deployment is automatic: pushing to `master` triggers `.github/workflows/jekyll.
   image:
     path: <cover image URL>
     lqip: /assets/img/placeholder.webp
+    alt: image description
   ```
+  **Tags must be lowercase** (e.g. `flutter`, `dart`, `channel` — never `Flutter`/`Dart`). Chirpy generates one tag page per exact tag string and is case-sensitive, so `Flutter` and `flutter` would produce two separate, duplicated tag pages. Chinese tags are unaffected. Categories, by contrast, follow the existing capitalized convention (e.g. `Flutter`).
+
+  **`date` must be the real creation time, never a future timestamp.** Set it from the actual current wall-clock time (run `date "+%Y-%m-%d %H:%M:%S %z"`), not a guessed/rounded value. Jekyll defaults to `future: false`, so a post dated even minutes ahead of "now" is silently excluded from the build and won't appear on the site until that time passes.
+
   Do **not** hand-add `last_modified_at` — `_plugins/posts-lastmod-hook.rb` derives it automatically from each post file's git commit history at build time (posts with more than one commit get a `last_modified_at` from `git log`). This means a post's "updated" date only changes once the file is actually committed again.
 - `_tabs/` — top-level nav pages (About, Archives, Categories, Tags), rendered via the `tabs` collection configured in `_config.yml`.
 - `_data/` — small YAML overrides consumed by the theme (e.g. `contact.yml`, `share.yml`).
@@ -46,3 +51,5 @@ Deployment is automatic: pushing to `master` triggers `.github/workflows/jekyll.
 ## Working with posts
 
 When adding or editing a post, match the existing frontmatter shape (categories/title/date/tags/keywords/image) seen in recent `_posts/` entries rather than inventing a new schema. Filenames must keep the `YYYY-MM-DD-` date prefix Jekyll expects for permalink/date resolution.
+
+For Chirpy-specific writing syntax and optional post features (preview image, prompts, image alignment/dark-light/shadow, MathJax, mermaid, code-block filename/line-number options, footnotes, video/audio embeds, toc/comments/pin flags, `media_subpath`), consult the `write-post` skill (`.claude/skills/write-post/SKILL.md`) — it loads on demand when writing posts.
