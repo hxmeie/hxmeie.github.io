@@ -252,7 +252,7 @@ private Entry getEntry(ThreadLocal<?> key) {
 
 我们来看下面的分析。
 
-![threadlocal.png](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707103514788.awebp)
+![threadlocal.png](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707103514788.webp)
 
 如上图所示，在ThreadLocal中存在一个这样的引用链。如果Thread一直在运行，那么此时由于强引用的value不能被回收，故此种情况下也可能出现内存泄漏的问题。因此，通常来说，在不需要使用这个ThreadLocal变量的使用，需要调用remove方法来避免内存泄漏的问题。
 
@@ -272,4 +272,4 @@ threadLocal2.set(2);
 
 因此，可以给出ThreadLocalMap的结构图如下：
 
-![threadlocal2.png](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707103541305.awebp)
+![threadlocal2.png](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707103541305.webp)

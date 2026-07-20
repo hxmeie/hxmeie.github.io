@@ -53,7 +53,7 @@ override fun onDestroy() {
 }
 ```
 
-![之前的生命周期](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202305221354445.awebp)
+![之前的生命周期](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202305221354445.webp)
 
 ### 2.2 Lifecycle回调生命周期
 
@@ -67,13 +67,13 @@ lifecycle.addObserver(object : LifecycleEventObserver {
 })
 ```
 
-![Lifecycle](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202305221354369.awebp)
+![Lifecycle](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202305221354369.webp)
 
 ## 3.源码分析
 
 ### 3.1 类关系图
 
-![Lifecycle](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202305221356941.awebp)
+![Lifecycle](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202305221356941.webp)
 
 - 在Activity 获取 Lifecycle，实际上是通过Activity的父类 **ComponentActvitiy** 获取，父类实现了 **LifecycleOwner** 接口，就能获取 Lifecycle ,最后注册 **LifecycleObserver** 就能拿到生命周期回调了。
 
@@ -211,7 +211,7 @@ static void dispatch(@NonNull Activity activity, @NonNull Lifecycle.Event event)
 - 这个类跟Lifecycle.Event的关系看图就能理解。
 - State只有5个但是生命周期可是不止5个，所以Google他们设计时，就创建流程正着走，销毁流程就反正走。
 
-![Lifecycle.State](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202305221356364.awebp)
+![Lifecycle.State](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202305221356364.webp)
 
 ```java
 /* Lifecycle.State */
@@ -392,7 +392,7 @@ static class ObserverWithState {
 
 ### 3.13 简易流程图
 
-![简易流程图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202305221356151.awebp)
+![简易流程图](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202305221356151.webp)
 
 >转载自：<https://juejin.cn/post/6970624724493664287>
 {: .prompt-info}

@@ -75,7 +75,7 @@ public void add() {
 
 当对象被synchronized关键字当成同步锁时，和锁相关的一系列操作都与Mark Word有关。由于在JDK1.6版本中对synchronized进行了锁优化，引入了偏向锁和轻量级锁（关于锁优化后边详情讨论）。Mark Word在不同锁状态下存储的内容有所不同。我们以32位JVM中对象头的存储内容如下图所示。
 
-![object_header.png](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707105426954.awebp)
+![object_header.png](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707105426954.webp)
 
 从图中可以清楚的看到，Mark Word中有2bit的数据用来标记锁的状态。无锁状态和偏向锁标记位为01，轻量级锁的状态为00，重量级锁的状态为10。
 
@@ -231,7 +231,7 @@ public synchronized void add(){
 
 在Linux系统架构中可以分为用户空间和内核，我们的程序都运行在用户空间，进入用户运行状态就是所谓的用户态。在用户态可能会涉及到某些操作如I/O调用，就会进入内核中运行，此时进程就被称为内核运行态，简称内核态。
 
-![linux_kernel.png](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707105532440.awebp)
+![linux_kernel.png](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260707105532440.webp)
 
 * **内核：** 本质上可以理解为一种软件，控制计算机的硬件资源，并提供上层应用程序运行的环境。
 * **用户空间：** 上层应用程序活动的空间。应用程序的执行必须依托于内核提供的资源，包括CPU资源、存储资源、I/O资源等。

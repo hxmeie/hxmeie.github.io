@@ -296,7 +296,7 @@ private data class LinearFontScaleConverter(private val fontScale: Float) : 	Fon
 
 此外，看过一些 Jetpack Compose 内部源码的同学应该知道，连接 Compose 和 View 体系之间的桥梁是 AndroidComposeView 类，而 AndroidComposeView 就通过 `fun Density(context: Context)` 方法来初始化其内部声明的 density 对象，CompositionLocals 类的 `ProvideCommonCompositionLocals` 方法又通过 LocalDensity 来将 AndroidComposeView 持有的 density 对象暴露给外部，从而使得框架内部和开发者均可以通过 `LocalDensity.current` 来获取到当前的 Density 对象，也即通过此方法拿到了 Android 系统的 `density` 和 `fontScale` 两个参数
 
-![img](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202402260946819.awebp)
+![img](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202402260946819.webp)
 
 根据以上线索，我们可以推断出 Jetpack Compose 目前采用的屏幕适配机制其实就和 Android 原生的 View 体系一样，都是以 **屏幕像素密度** 作为适配基础，这使得 Jetpack Compose 一样存在文章开头介绍的问题，在不同手机屏幕上的显示效果相比设计稿都会有一点点误差
 
@@ -388,7 +388,7 @@ fun Greeting() {
 
 在三台不同分辨率的模拟器上运行代码，查看显示效果
 
-![img](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202402260946589.awebp)
+![img](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang@master/images/202402260946589.webp)
 
 很明显就可以看出来，三台模拟器的屏幕宽度并非刚好就是 360 dp，因此前两个 Spacer 控件并没有达到预期效果；而第二个 `Greeting()` 函数仅仅是多嵌套在了一个 CompositionLocalProvider 中而已，直接套用设计稿给出的尺寸就让两个 Spacer 控件在不同屏幕上均占据了屏幕的一半宽度，完美达到了设计稿的要求
 

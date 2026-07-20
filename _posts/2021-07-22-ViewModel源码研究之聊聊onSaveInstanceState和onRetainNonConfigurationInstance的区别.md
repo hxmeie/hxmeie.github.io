@@ -67,7 +67,7 @@ public final Object onRetainNonConfigurationInstance() {
 
 # 2. onSaveInstanceState(Bundle outState)方法详解
 
-首先在**ComponentActivity**的**onSaveInstanceState(Bundle outState)** 方法中加个断点。调用栈如下： ![img](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260713175944049.awebp) **重点关注ActivityThread.callActivityOnSaveInstanceState(Bundle outState)**
+首先在**ComponentActivity**的**onSaveInstanceState(Bundle outState)** 方法中加个断点。调用栈如下： ![img](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260713175944049.webp) **重点关注ActivityThread.callActivityOnSaveInstanceState(Bundle outState)**
 
 ## 2.1 ActivityThread.callActivityOnSaveInstanceState(Bundle outState)
 
@@ -240,7 +240,7 @@ final void activityStoppedLocked(Bundle newIcicle, PersistableBundle newPersiste
 
 ## 2.6 被杀端后恢复数据过程
 
-![img](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260713190931081.awebp)
+![img](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260713190931081.webp)
 
 ## 2.7 ActivityStackSupervisor.realStartActivityLocked
 
@@ -299,7 +299,7 @@ private Activity performLaunchActivity(ActivityClientRecord r, Intent customInte
 
 # 3. onRetainNonConfigurationInstance()
 
-![img](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260713191159207.awebp)
+![img](https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/20260713191159207.webp)
 
 该方法是在重建**Activity**时调用**performDestoryActivity**时会保存数据。
 
