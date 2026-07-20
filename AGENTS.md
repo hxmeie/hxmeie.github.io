@@ -56,4 +56,6 @@ Deployment is automatic: pushing to `master` triggers `.github/workflows/jekyll.
 
 When adding or editing a post, match frontmatter in recent files under `_posts/`; do not invent a new schema. Filenames must preserve the `YYYY-MM-DD-` prefix that Jekyll uses for date and permalink resolution.
 
+Content images are hosted on jsDelivr (`https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/...`). Image URLs must end in a standard extension — `.webp`, `.jpg`, or `.png` — and **never `.awebp`**. Some upload tools (PicGo/Typora) emit `.awebp` filenames; jsDelivr serves `.awebp` as `application/octet-stream` instead of `image/webp`, which the theme's GLightbox lightbox fails to recognize as an image, so clicking a `.awebp` image downloads the file instead of opening the preview (the inline `<img>` still displays via content sniffing, so the page looks fine until you click). When you encounter `.awebp`, rename the file to `.webp` in the `hxmeie/tuchuang` image repo (`git mv` + push) and update the post URLs to match.
+
 For Chirpy-specific writing syntax and optional post features, consult `.claude/skills/write-post/SKILL.md` when available. It covers preview images, prompts, image alignment/dark-light/shadow, MathJax, Mermaid, code-block filename and line-number options, footnotes, media embeds, TOC/comments/pin flags, and `media_subpath`.
