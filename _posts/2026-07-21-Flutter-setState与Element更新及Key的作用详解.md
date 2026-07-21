@@ -7,7 +7,7 @@ keywords: [Flutter, setState, Element, updateChild, canUpdate, markNeedsBuild, K
 mermaid: true
 ---
 
-这是 Flutter 渲染原理系列的第三篇。前两篇《Flutter 三棵树：Widget、Element、RenderObject 详解》和《Flutter 渲染管线：从 build 到上屏》分别讲了**结构**和**流程**。这一篇聚焦一个每天都在用、却最容易踩坑的三角关系：**`setState` 触发了什么 → Element 如何决定复用还是重建 → `Key` 如何干预这个决定**。搞懂这条链，"交换列表项后状态错乱""动画莫名重来""输入框内容串位"这类经典 bug 就不再是玄学。
+这是 Flutter 渲染原理系列的第三篇。前两篇[《Flutter 三棵树：Widget、Element、RenderObject 详解》](/posts/Flutter三棵树Widget-Element-RenderObject详解/)和[《Flutter 渲染管线：从 build 到上屏》](/posts/Flutter渲染管线从build到上屏详解/)分别讲了**结构**和**流程**。这一篇聚焦一个每天都在用、却最容易踩坑的三角关系：**`setState` 触发了什么 → Element 如何决定复用还是重建 → `Key` 如何干预这个决定**。搞懂这条链，"交换列表项后状态错乱""动画莫名重来""输入框内容串位"这类经典 bug 就不再是玄学。
 
 ## 一张图看懂三者关系
 
@@ -305,4 +305,4 @@ _formKey.currentWidget;              // 拿到 Widget
 - Element 的 `updateChild` 五分支决定复用还是重建，裁判是 `canUpdate`——**类型相同且 key 相等才复用**。
 - `Key` 是你唯一能干预 `canUpdate` 的把手，只在"同父、同类型、有状态、顺序会变"时才需要，列表项首选 `ValueKey(业务id)`。
 - `UniqueKey` 是强制重建的工具，`GlobalKey` 是跨树命令式拿 State 的重武器，都别滥用。
-- 结合前两篇《Flutter 三棵树》《Flutter 渲染管线》一起看，Flutter 的"重建—复用—渲染"闭环就完整了。
+- 结合前两篇[《Flutter 三棵树》](/posts/Flutter三棵树Widget-Element-RenderObject详解/)[《Flutter 渲染管线》](/posts/Flutter渲染管线从build到上屏详解/)一起看，Flutter 的"重建—复用—渲染"闭环就完整了。

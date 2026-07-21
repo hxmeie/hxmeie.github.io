@@ -9,7 +9,7 @@ mermaid: true
 
 "Flutter 状态管理到底该用哪个"大概是社区里最经久不衰的争论。原因也不难理解：Flutter 官方只给了 `setState` 和 `InheritedWidget` 两块地基，上层方案百花齐放。本文横向对比四个最主流的方案——**Provider、Riverpod、Bloc、GetX**，用同一个例子把它们的写法、心智模型、优缺点摆在一起，最后给一份可落地的选型建议。
 
-> 前置知识：状态管理的本质，是"状态变化 → 通知 UI 重建"。不管哪个方案，底层都绕不开 `InheritedWidget`（用于在树中向下传递依赖）和某种"可监听对象"（`ChangeNotifier` / `Stream` / `ValueNotifier`）。理解这一点，看每个方案就都是"换了层皮"。相关机制见《Flutter 三棵树》里对 `InheritedWidget` 与 `BuildContext` 的讨论。
+> 前置知识：状态管理的本质，是"状态变化 → 通知 UI 重建"。不管哪个方案，底层都绕不开 `InheritedWidget`（用于在树中向下传递依赖）和某种"可监听对象"（`ChangeNotifier` / `Stream` / `ValueNotifier`）。理解这一点，看每个方案就都是"换了层皮"。相关机制见[《Flutter 三棵树》](/posts/Flutter三棵树Widget-Element-RenderObject详解/)里对 `InheritedWidget` 与 `BuildContext` 的讨论。
 {: .prompt-info }
 
 ## 先建立评价坐标系
@@ -279,4 +279,4 @@ flowchart TD
 - 所有方案的本质都是"状态变化 → 通知重建"，底层是 `InheritedWidget` + 可监听对象，差异在样板量、安全性和纪律性的取舍。
 - **Provider**：官方最小共识，概念少但运行时才报错；**Riverpod**：编译期安全、不依赖 context、异步内建，新项目主流；**Bloc**：单向数据流、强制分离，大项目最稳；**GetX**：全家桶、样板极少，小项目爽、大项目慎用。
 - 选型没有银弹：**按项目规模和团队选，并全项目统一**，比追"最强方案"重要得多。
-- 想深入理解它们共同的地基，回看《Flutter 三棵树》里的 `InheritedWidget` 与 `BuildContext`，以及《Flutter 渲染管线》里状态变化如何驱动重建。
+- 想深入理解它们共同的地基，回看[《Flutter 三棵树》](/posts/Flutter三棵树Widget-Element-RenderObject详解/)里的 `InheritedWidget` 与 `BuildContext`，以及[《Flutter 渲染管线》](/posts/Flutter渲染管线从build到上屏详解/)里状态变化如何驱动重建。
