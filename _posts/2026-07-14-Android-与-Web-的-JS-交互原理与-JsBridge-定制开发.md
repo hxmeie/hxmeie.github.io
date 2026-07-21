@@ -751,3 +751,64 @@ dsBridge.call("login", { name: "x" }, (r) => { /* ... */ }); // 异步
 
 > 一句话总结：**所有 JsBridge 都是对 `evaluateJavascript` + `addJavascriptInterface` / URL 拦截 / `postMessage` 这几个原生口子的封装**，区别只在于封装得多优雅、多安全。理解了原理，选型和排障都会变得清晰。
 {: .prompt-tip }
+
+## 面试问题与解答
+
+### Q1：WebView 里 JS 和 Native 为什么不能直接互相调用？「交互」的本质是什么？
+
+因为二者不在同一个运行时：Native 跑在 Android 虚拟机里，JS 跑在 WebView 的 JS 引擎（V8）里，**两者内存不互通、没有共享的调用栈**。所谓交互，本质是在 WebView 这条边界上，利用官方开放的几个「口子」，把**调用意图和数据（通常序列化成字符串 / JSON）**从一端搬到另一端。方向只有两个：`Native → JS`（`loadUrl("javascript:")` / `evaluateJavascript`）和 `JS → Native`（`addJavascriptInterface` / URL 拦截 / `prompt` 拦截）。所有框架都是这几个原生 API 的组合封装。
+
+### Q2：`loadUrl("javascript:...")` 和 `evaluateJavascript()` 有什么区别？
+
+- `loadUrl("javascript:...")` 是 API 16 及以下的唯一选择：**拿不到返回值**，且会走一次完整的 loadUrl 流程，有性能开销，早期还会引发焦点 / 滚动异常。
+- `evaluateJavascript()` 是 API 19（4.4）后的推荐方式：**异步执行、不刷新页面**，并能通过 `ValueCallback` **拿到 JS 表达式的返回值**（JSON 字符串形式）。必须在主线程调用。
+
+### Q3：`addJavascriptInterface` 有什么著名的安全漏洞？后来是怎么修复的？
+
+Android 4.2 以前，`addJavascriptInterface` 会把注入对象的**所有 public 方法（含继承自 `Object` 的）**都暴露给 JS。攻击者可以通过反射 `getClass().getClassLoader()...` 一路拿到 `Runtime.getRuntime().exec()`，从而**执行任意命令**（CVE-2012-6636）。4.2（API 17）起引入 `@JavascriptInterface` 注解，**只有被显式标注的方法才会暴露**，漏洞才被堵上。这也是早期各家自研 JsBridge 绕开它、改用 URL 拦截的核心动机。
+
+### Q4：JS 调 Native 的三条路线各有什么优缺点？
+
+- **A. `addJavascriptInterface`**：直接把对象注入到 `window`，能同步返回值；但需 `@JavascriptInterface` 注解、每加功能就得注册方法、且回调不优雅。
+- **B. 拦截自定义 URL Scheme**（`shouldOverrideUrlLoading`）：规避了老版本安全漏洞；但 **URL 有长度限制**、且**本身没有返回值通道**，需要 Native 再用 `evaluateJavascript` 回调 JS。
+- **C. 拦截 `prompt`**（`onJsPrompt`）：**天然能带同步返回值**（`result.confirm()`）、无长度限制；但属于语义 hack，会和页面真实的 prompt 混淆，需协议区分。
+
+### Q5：为什么 URL 拦截偏爱 `prompt` 而不是 `alert` / `confirm`？
+
+因为 `prompt` 在 JS 端调用后**能同步接收一个字符串返回值**（`window.prompt()` 的返回值），Native 在 `onJsPrompt` 里用 `result.confirm(response)` 就能把结果**同步**送回 JS。而 `alert` 无返回值、`confirm` 只能返回布尔值，都无法承载完整的数据回传。
+
+### Q6：JsBridge 到底解决了什么问题？它的核心机制是什么？
+
+原生 API 很「原始」：`addJavascriptInterface` 每加功能要注册方法、无法优雅回调；URL 拦截没有返回值通道、有长度限制；各方式风格割裂。JsBridge 就是在这些能力之上封装的**统一、双向、支持异步回调**的框架，核心解决四件事：**① 统一的双向 API；② 支持回调（把异步结果送回发起方）；③ 消息队列管理；④ 用一个通道承载无限多个方法**。
+
+其经典实现的关键是**消息协议里的 `callbackId` / `responseId` 是同一把钥匙**：发起方生成 `callbackId` 并暂存回调函数，接收方处理完把它原样放进 `responseId` 送回，发起方据此找到当初的回调执行——从而在「无返回值通道」的裸机制上模拟出请求-响应配对。
+
+### Q7：经典 JsBridge 里，JS 通知 Native「有消息」为什么要用一个隐藏 iframe？
+
+因为 URL 拦截方案里，JS 没法直接「叫醒」Native，只能靠**改变 URL 触发 `shouldOverrideUrlLoading`**。用隐藏 iframe 的 `src` 变化（如 `yy://__QUEUE_MESSAGE__/`）去「戳」一下 Native，比直接改 `window.location.href` 更安全——不会影响主页面导航、不会打断当前页面状态。Native 收到这个信号后，再用 `evaluateJavascript` 调 `_fetchQueue()` 把 JS 攒的消息队列一次性取走。
+
+### Q8：现代方案 `WebMessageListener` 相比传统方案好在哪？有什么约束？
+
+优势：**① 安全**——注册时强制传入 origin 白名单，只有匹配域名的页面才能拿到 bridge 对象；**② 标准语义**——走 Web 标准的 `postMessage` / `MessagePort`，不是 hack；**③ 回调在 UI 线程**（`onPostMessage` 带 `@UiThread`）；**④ 官方维护**，无历史包袱。
+
+约束：**只支持异步**（没有同步返回值），且**需要 WebView 内核支持该 feature**，必须用 `WebViewFeature.isFeatureSupported(WEB_MESSAGE_LISTENER)` 检测，老内核要有回退方案（降级到方案二）。
+
+### Q9：`@JavascriptInterface` 方法运行在哪个线程？和方案一有什么区别？
+
+`@JavascriptInterface` 方法**不在 UI 线程执行，而是在 WebView 内部的 `JavaBridge` 后台线程**。任何碰 UI 的操作（Toast、页面跳转、改控件）都必须 `webView.post { }` 切回主线程，否则崩溃。这一点和方案一（`WebMessageListener` 的 `onPostMessage` 带 `@UiThread`、天然在主线程）**正好相反**，是面试高频坑。
+
+### Q10：用 `addJavascriptInterface` 的 JsBridge 上线时，为什么要加混淆规则？
+
+R8 / ProGuard 在混淆时会**重命名方法**，一旦 `@JavascriptInterface` 方法被改名，JS 端按原名调用就会失败。所以必须 keep 住这些方法：
+
+```plaintext
+-keepclassmembers class com.your.pkg.JsApiBridge {
+    @android.webkit.JavascriptInterface <methods>;
+}
+```
+
+### Q11：两套现代方案怎么选型？
+
+- **新项目、WebView 版本可控** → 首选 **`WebMessageListener`**，安全性和线程模型最省心。
+- **需要同步返回值、或要兼容各种老设备** → 用 **`addJavascriptInterface`（DSBridge 思路）**，它支持同步 `return`、兼容性拉满（API 17+ 几乎全覆盖）。
+- **最稳的工程实践**：`attach()` 时先检测 `WEB_MESSAGE_LISTENER`，支持就走方案一，不支持自动降级到方案二，**对上层业务暴露同一套 `call()` API**。
