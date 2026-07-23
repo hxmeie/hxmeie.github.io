@@ -164,8 +164,20 @@ collections:
   tabs:
     output: true
     sort_by: order
+  interview:
+    output: true
+    sort_by: date
+    permalink: /interview/:title/
 
 defaults:
+  - scope:
+      path: ""
+      type: interview
+    values:
+      layout: interview
+      comments: false
+      toc: false # 关闭 TOC，避免侧栏目录暴露未解锁文章的标题结构
+      sitemap: false # 不写入 sitemap.xml，避免被搜索引擎发现
   - scope:
       path: "" # An empty string here means all files in the project
       type: posts

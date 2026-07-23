@@ -1,7 +1,7 @@
 ---
 # the default layout is 'page'
 icon: fas fa-info-circle
-order: 4
+order: 6
 ---
 我是一名热爱技术的Android开发工程师，擅长Java、Kotlin和Python等编程语言。除了移动应用开发，我对人工智能（AI）也充满了浓厚的兴趣，并在AI绘画和AI视频换脸等领域进行了学习和实践。
 

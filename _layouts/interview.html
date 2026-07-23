@@ -1,0 +1,10 @@
+---
+layout: post
+---
+
+{% comment %} 单篇面试文章：正文默认隐藏，输入口令后展开 {% endcomment %}
+{% include interview-gate.html %}
+
+<div class="interview-protected" hidden>
+  {{ content }}
+</div>
