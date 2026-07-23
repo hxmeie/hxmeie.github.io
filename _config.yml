@@ -174,10 +174,10 @@ defaults:
       path: ""
       type: interview
     values:
-      layout: interview
+      layout: post
       comments: false
-      toc: false # 关闭 TOC，避免侧栏目录暴露未解锁文章的标题结构
-      sitemap: false # 不写入 sitemap.xml，避免被搜索引擎发现
+      toc: true
+      sitemap: false # 不写入 sitemap.xml：面试文章仅从「面试」栏进入，不对外索引
   - scope:
       path: "" # An empty string here means all files in the project
       type: posts

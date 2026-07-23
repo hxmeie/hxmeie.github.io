@@ -57,7 +57,7 @@ Deployment is automatic: pushing to `master` triggers `.github/workflows/jekyll.
   Do not manually add `last_modified_at`. `_plugins/posts-lastmod-hook.rb` derives it from each post file's Git commit history during builds.
 
 - `_tabs/`: Top-level navigation pages, rendered through the `tabs` collection in `_config.yml`.
-- `_interview/`: Password-protected interview articles (the `interview` collection). See "Interview Articles" below. Never put these in `_posts/`.
+- `_interview/`: Interview articles (the `interview` collection), shown only under the 面试 tab and kept out of the main feed. See "Interview Articles" below. Never put these in `_posts/`.
 - `_data/`: Small YAML overrides consumed by the theme, such as `contact.yml` and `share.yml`.
 - `_plugins/`: Repository-local Jekyll plugins and hooks.
 - `_config.yml`: Site configuration, including Giscus, PWA cache, pagination, permalink structure, and Jekyll exclusions. Do not change the `/posts/:title/` permalink structure without updating existing post links.
@@ -71,22 +71,20 @@ When adding or editing a post, match frontmatter in recent files under `_posts/`
 
 Content images are hosted on jsDelivr (`https://cdn.jsdelivr.net/gh/hxmeie/tuchuang/images/...`). Image URLs must end in a standard extension — `.webp`, `.jpg`, or `.png` — and **never `.awebp`**. Some upload tools (PicGo/Typora) emit `.awebp` filenames; jsDelivr serves `.awebp` as `application/octet-stream` instead of `image/webp`, which the theme's GLightbox lightbox fails to recognize as an image, so clicking a `.awebp` image downloads the file instead of opening the preview (the inline `<img>` still displays via content sniffing, so the page looks fine until you click). When you encounter `.awebp`, rename the file to `.webp` in the `hxmeie/tuchuang` image repo (`git mv` + push) and update the post URLs to match.
 
-## Interview Articles (Password-Protected)
+## Interview Articles
 
-Interview articles live in the `interview` collection, **not** in `_posts/`. They appear only under the sidebar **面试** tab, behind a client-side password gate, and are hidden from the home page, archives, categories, tags, RSS feed, sitemap, and site search. This is a *soft* gate: the content still ships in the HTML, so it deters casual browsing but is not real encryption. Do not treat it as confidential.
+Interview articles live in the `interview` collection, **not** in `_posts/`. They appear only under the sidebar **面试** tab and are kept out of the home page, archives, categories, tags, RSS feed, sitemap, and site search (collection items are not in `site.posts`/`site.categories`/`site.tags`). They are otherwise public: anyone who opens `/interview/:title/` can read them. This is organizational separation, not access control.
 
-To make an article show up under the 面试 tab, the only thing that matters is **its folder** — put the `.md` file in `_interview/`. The `categories: [面试]` category is unrelated; a file left in `_posts/` with that category stays public and does **not** enter the 面试 tab.
+To make an article show up under the 面试 tab, the only thing that matters is **its folder** — put the `.md` file in `_interview/`. The `categories: [面试]` category is unrelated; a file left in `_posts/` with that category stays in the main feed and does **not** enter the 面试 tab.
 
 Rules for `_interview/*.md`:
 
 - **Location**: must be in `_interview/`. Filenames keep the `YYYY-MM-DD-title.md` prefix; the date is stripped for the URL, yielding `/interview/:title/`.
 - **Required frontmatter**: `title` and `date` (the tab list sorts by `date` descending, and the post layout renders it). Obtain `date` from `date "+%Y-%m-%d %H:%M:%S %z"`.
-- **Do not set `layout`**: the `interview` layout is applied automatically via `_config.yml` defaults. It wraps the body in `.interview-protected` (hidden until unlock) and includes the gate.
-- **Defaults already set** for the collection: `comments: false`, `toc: false` (TOC would leak headings of a locked article), `sitemap: false`. Override per-file only with a clear reason.
+- **Do not set `layout`**: the collection defaults to `layout: post` via `_config.yml`, so articles render exactly like normal posts.
+- **Defaults already set** for the collection: `comments: false`, `sitemap: false` (kept out of the search-engine index), `toc: true`. Override per-file only with a clear reason.
 - **`categories`/`tags` are optional and cosmetic here** — they render on the article page but generate no category/tag pages (collection items are not in `site.categories`/`site.tags`), so those links go nowhere.
 - `image`, `mermaid: true`, `math: true`, etc. work as in normal posts.
-
-Password: the SHA-256 hash lives in `_includes/interview-gate.html` as `PW_HASH`. Change it with `printf '%s' '新口令' | shasum -a 256`. The mechanism uses `sessionStorage` so one unlock covers the whole browsing session; its script is deferred to DOM-ready so revisiting the tab keeps the content revealed.
 
 ## Chirpy Writing Syntax
 
