@@ -12,11 +12,23 @@ Because the theme is consumed as a gem rather than forked, this repository only 
 
 ```bash
 bundle install                              # Install Ruby dependencies (first-time setup)
+git config core.hooksPath tools             # First-time setup: enable the repo's git hooks (see "Git Hooks")
 bundle exec jekyll serve                    # Local dev server with live rebuild: http://localhost:4000
 bundle exec jekyll build                    # Production build to ./_site
 JEKYLL_ENV=production bundle exec jekyll build --baseurl ""   # Mirror the CI build
 ruby tools/check-tag-conflicts.rb           # Check tag/category slug conflicts
 ```
+
+### Git Hooks
+
+The repo ships a `pre-commit` hook (`tools/pre-commit`) that runs `tools/check-tag-conflicts.rb` before every commit and blocks commits with conflicting tag/category slugs. Git never clones `.git/hooks` or the `core.hooksPath` setting (a security measure), so hooks are **never active automatically** — each fresh clone must enable them once:
+
+```bash
+git config core.hooksPath tools   # recommended: always runs the tracked tools/pre-commit, no stale copy
+# or: bash tools/install-hooks.sh  # copies tools/pre-commit into .git/hooks (must re-run if the hook changes)
+```
+
+Bypass a single commit with `git commit --no-verify`.
 
 The project has no test suite, linter, or single-file test runner. `html-proofer` is present in the `Gemfile` `:test` group but is not wired into a script. Validate changes by building the site and, when relevant, running `jekyll serve` and checking the affected page in a browser.
 
