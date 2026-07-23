@@ -30,8 +30,10 @@
         .join('');
     }
 
-    // 必须等 DOM 就绪后再执行：脚本在源码中位于 .interview-protected 之前，
-    // 若同步执行，自动解锁时受保护内容还没进 DOM，会导致切回来后列表不显示。
+    /* 必须等 DOM 就绪后再执行：脚本在源码中位于 .interview-protected 之前，
+       若同步执行，自动解锁时受保护内容还没进 DOM，会导致切回来后列表不显示。
+       注意：这里禁止使用 // 行注释——生产构建启用 compress_html 会折叠换行，
+       行注释会把后续代码一起吞掉，导致按钮无响应，只能用块注释。 */
     function init() {
       var lock = document.getElementById('interview-lock');
       var input = document.getElementById('interview-pw');
@@ -45,7 +47,7 @@
         });
       }
 
-      // 同一会话内解锁一次即可，刷新/跳转到其它面试文章无需重复输入。
+      /* 同一会话内解锁一次即可，刷新/跳转到其它面试文章无需重复输入。 */
       try {
         if (sessionStorage.getItem(STORE_KEY) === '1') reveal();
       } catch (e) {}
